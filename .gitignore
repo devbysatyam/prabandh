@@ -38,3 +38,6 @@ Thumbs.db
 .eslintcache
 .stylelintcache
 *.tsbuildinfo
+
+*.mp4
+

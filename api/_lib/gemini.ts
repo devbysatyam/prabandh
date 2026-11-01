@@ -1,7 +1,7 @@
 import { GoogleGenAI } from '@google/genai';
 
-const API_KEY =
-  process.env.GEMINI_API_KEY || 'AQ.Ab8RN6LIufQvKwMF095_XCTc99rv8tcAf29WmNIxgGY73Vw5oA';
+// Server-side only. No hard-coded fallback: without GEMINI_API_KEY the API uses its deterministic engine.
+const API_KEY = process.env.GEMINI_API_KEY;
 export const MODEL_NAME = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
 
 let client: GoogleGenAI | null = null;

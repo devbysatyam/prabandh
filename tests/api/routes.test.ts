@@ -9,8 +9,8 @@ describe('api/routes.test.ts', () => {
       'POST',
     );
     expect(res.status).toBe(200);
-    expect(res.data.themes.length).toBeGreaterThan(0);
-    expect(res.data.activities.length).toBeGreaterThan(0);
+    expect((res.data['themes'] as unknown[]).length).toBeGreaterThan(0);
+    expect((res.data['activities'] as unknown[]).length).toBeGreaterThan(0);
   });
 
   it('handles review-plan route returning readiness score and action items', async () => {

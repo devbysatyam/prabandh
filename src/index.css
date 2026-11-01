@@ -7,22 +7,57 @@
     color-scheme: light dark;
   }
 
+  html {
+    /* Respect the user's preferred text size (WCAG 1.4.4) and keep anchored targets clear of sticky bars */
+    scroll-padding-top: 8.5rem;
+  }
+
   body {
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    line-height: 1.5;
+  }
+
+  /* Visible, high-contrast keyboard focus indicator (WCAG 2.4.7, 2.4.11, 2.4.13):
+     2px solid ring with a contrasting halo so it stays >= 3:1 on light, dark and coloured surfaces. */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 3px solid #1d4ed8;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px #ffffff;
+  }
+
+  :where(.dark) :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline-color: #93c5fd;
+    box-shadow: 0 0 0 5px #0c0a09;
+  }
+
+  /* Programmatic-focus targets (skip-link destination, tab panels) need no ring on pointer focus */
+  main:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Range sliders: ensure a comfortably large grab target */
+  input[type='range'] {
+    min-height: 24px;
+  }
+
+  input[type='checkbox'],
+  input[type='radio'] {
+    min-width: 20px;
+    min-height: 20px;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-700 px-4 py-2.5 min-h-[40px] text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800 active:scale-[0.98] disabled:opacity-60 disabled:pointer-events-none;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 px-4 py-2.5 text-sm font-semibold text-stone-700 dark:text-stone-200 shadow-sm transition hover:bg-stone-50 dark:hover:bg-stone-800 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-2.5 min-h-[40px] text-sm font-semibold text-stone-800 dark:text-stone-100 shadow-sm transition hover:bg-stone-50 dark:hover:bg-stone-800 active:scale-[0.98] disabled:opacity-60 disabled:pointer-events-none;
   }
 
   .btn-quiet {
-    @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition;
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-2.5 py-1.5 min-h-[32px] min-w-[32px] text-xs font-medium text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition;
   }
 
   .card {
@@ -30,13 +65,114 @@
   }
 
   .input-base {
-    @apply w-full rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-950 px-3.5 py-2.5 text-sm text-stone-900 dark:text-stone-100 placeholder-stone-400 focus:border-brand-500 focus:bg-white dark:focus:bg-stone-900 focus:outline-none focus:ring-2 focus:ring-brand-500/20 transition;
+    @apply w-full rounded-xl border border-stone-400 dark:border-stone-600 bg-stone-50/50 dark:bg-stone-950 px-3.5 py-2.5 min-h-[40px] text-sm text-stone-900 dark:text-stone-100 placeholder-stone-500 dark:placeholder-stone-400 focus:border-brand-700 focus:bg-white dark:focus:bg-stone-900 transition;
+  }
+
+  /* Skip link: first focusable element, revealed on keyboard focus (WCAG 2.4.1) */
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    z-index: 100;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.75rem;
+    background: #1c1917;
+    color: #ffffff;
+    font-weight: 700;
+    text-decoration: underline;
+    transition: top 0.15s ease;
+  }
+
+  .skip-link:focus,
+  .skip-link:focus-visible {
+    top: 1rem;
+  }
+}
+
+/* Larger touch targets on coarse pointers (WCAG 2.5.5 AAA / 2.5.8 AA) */
+@media (pointer: coarse) {
+  button,
+  [role='tab'],
+  select,
+  input:not([type='range']):not([type='checkbox']):not([type='radio']) {
+    min-height: 44px;
+  }
+
+  .btn-quiet {
+    min-width: 44px;
+  }
+}
+
+/* Respect reduced-motion preference (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Increased contrast preference */
+@media (prefers-contrast: more) {
+  :root {
+    --tw-ring-opacity: 1;
+  }
+
+  .card,
+  .input-base,
+  .btn-secondary {
+    border-color: currentColor !important;
+    border-width: 2px;
+  }
+
+  .text-stone-400,
+  .text-stone-500,
+  .dark\:text-stone-400,
+  .dark\:text-stone-500 {
+    color: inherit !important;
+  }
+}
+
+/* Windows High Contrast / forced colors: let the system palette drive and keep state visible */
+@media (forced-colors: active) {
+  .card,
+  .input-base,
+  .btn-primary,
+  .btn-secondary,
+  [role='tab'] {
+    border: 1px solid CanvasText;
+  }
+
+  [role='tab'][aria-selected='true'] {
+    border-bottom: 4px solid Highlight;
+    forced-color-adjust: none;
+    color: Highlight;
+  }
+
+  [aria-pressed='true'],
+  [aria-current='page'] {
+    outline: 2px solid Highlight;
+  }
+
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 3px solid Highlight;
+    box-shadow: none;
+  }
+
+  .skip-link {
+    background: Canvas;
+    color: LinkText;
+    border: 2px solid CanvasText;
   }
 }
 
 /* Print Styles */
 @media print {
-  .no-print {
+  .no-print,
+  .skip-link {
     display: none !important;
   }
 
@@ -45,8 +181,29 @@
     color: black !important;
   }
 
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.8em;
+    word-break: break-all;
+  }
+
   .card {
     border: 1px solid #ddd !important;
     box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  table {
+    break-inside: auto;
+  }
+
+  tr,
+  th,
+  td {
+    break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
   }
 }

@@ -20,14 +20,16 @@ export const PrintSummary: FC<PrintSummaryProps> = ({ plan }) => {
       {/* Header */}
       <div className="border-b-2 border-black pb-4 flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">{plan.title}</h1>
+          <h2 className="text-3xl font-extrabold tracking-tight">{plan.title}</h2>
           <p className="text-sm font-semibold uppercase tracking-wider text-gray-600 mt-1">
             Occasion: {plan.occasion.toUpperCase()} · Location: {plan.city ?? 'Local Venue'}
           </p>
         </div>
         <div className="text-right">
           <p className="text-sm font-bold">Celebration Date: {plan.eventDate}</p>
-          <p className="text-xs text-gray-500">Generated via Prabandh · प्रबंध</p>
+          <p className="text-xs text-gray-500">
+            Generated via Prabandh · <span lang="hi">प्रबंध</span>
+          </p>
         </div>
       </div>
 
@@ -60,11 +62,18 @@ export const PrintSummary: FC<PrintSummaryProps> = ({ plan }) => {
           Category Budget Allocation
         </h2>
         <table className="w-full text-left text-xs border border-gray-200">
+          <caption className="sr-only">Category budget allocation</caption>
           <thead className="bg-gray-100 font-bold">
             <tr>
-              <th className="p-2 border">Category</th>
-              <th className="p-2 border text-right">Allocated (INR ₹)</th>
-              <th className="p-2 border text-right">Share (%)</th>
+              <th scope="col" className="p-2 border">
+                Category
+              </th>
+              <th scope="col" className="p-2 border text-right">
+                Allocated (INR ₹)
+              </th>
+              <th scope="col" className="p-2 border text-right">
+                Share (%)
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -90,11 +99,18 @@ export const PrintSummary: FC<PrintSummaryProps> = ({ plan }) => {
             Day-of Event Itinerary & Leads
           </h2>
           <table className="w-full text-left text-xs border border-gray-200">
+            <caption className="sr-only">Day-of event itinerary</caption>
             <thead className="bg-gray-100 font-bold">
               <tr>
-                <th className="p-2 border w-20">Time</th>
-                <th className="p-2 border">Ceremony / Activity</th>
-                <th className="p-2 border w-44">Lead Coordinator</th>
+                <th scope="col" className="p-2 border w-20">
+                  Time
+                </th>
+                <th scope="col" className="p-2 border">
+                  Ceremony / Activity
+                </th>
+                <th scope="col" className="p-2 border w-44">
+                  Lead Coordinator
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -118,7 +134,9 @@ export const PrintSummary: FC<PrintSummaryProps> = ({ plan }) => {
       {/* Sign-off */}
       <div className="pt-6 border-t border-gray-300 text-xs text-gray-500 flex justify-between">
         <span>Confidential Family Event Plan</span>
-        <span>Prabandh · प्रबंध · Connected Celebration Architecture</span>
+        <span>
+          Prabandh · <span lang="hi">प्रबंध</span> · Connected Celebration Architecture
+        </span>
       </div>
     </div>
   );

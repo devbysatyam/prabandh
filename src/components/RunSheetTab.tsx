@@ -1,3 +1,4 @@
+import { useCopyToClipboard } from '../hooks/useCopyToClipboard';
 import { useState, useMemo, type FC, type FormEvent } from 'react';
 import type { Plan, RunSheetItem } from '../schemas';
 import type { Action } from '../state/planStore';
@@ -11,7 +12,8 @@ interface RunSheetTabProps {
 
 export const RunSheetTab: FC<RunSheetTabProps> = ({ plan, dispatch }) => {
   const sortedItems = useMemo(() => sortRunSheet(plan.runSheet), [plan.runSheet]);
-  const [copiedWhatsapp, setCopiedWhatsapp] = useState(false);
+  const { copiedKey, copy } = useCopyToClipboard();
+  const copiedWhatsapp = copiedKey !== null;
 
   // New item modal state
   const [showAddModal, setShowAddModal] = useState(false);
@@ -42,10 +44,7 @@ export const RunSheetTab: FC<RunSheetTabProps> = ({ plan, dispatch }) => {
 
   function handleCopyWhatsapp() {
     const text = formatRunSheetWhatsapp(plan.runSheet, plan.title, plan.eventDate);
-    navigator.clipboard.writeText(text).then(() => {
-      setCopiedWhatsapp(true);
-      setTimeout(() => setCopiedWhatsapp(false), 2500);
-    });
+    copy(text);
   }
 
   const completedCount = plan.runSheet.filter((i) => i.status === 'completed').length;
@@ -58,10 +57,10 @@ export const RunSheetTab: FC<RunSheetTabProps> = ({ plan, dispatch }) => {
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>
             <h3 className="font-bold text-stone-900 dark:text-stone-100 text-base flex items-center gap-2">
-              <Icon name="clock" className="w-5 h-5 text-brand-600" />
+              <Icon name="clock" className="w-5 h-5 text-brand-700 dark:text-brand-400" />
               Day-of Master Itinerary & Live Run Sheet
             </h3>
-            <p className="text-xs text-stone-500 dark:text-stone-400">
+            <p className="text-xs text-stone-600 dark:text-stone-400">
               Hour-by-hour schedule on the day of the event with assigned family leads and real-time
               status toggles.
             </p>
@@ -69,7 +68,7 @@ export const RunSheetTab: FC<RunSheetTabProps> = ({ plan, dispatch }) => {
 
           <div className="flex items-center gap-2">
             <button type="button" onClick={handleCopyWhatsapp} className="btn-secondary text-xs">
-              <Icon name="whatsapp" className="w-4 h-4 text-emerald-500" />
+              <Icon name="whatsapp" className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
               {copiedWhatsapp ? 'Copied to Clipboard!' : 'Broadcast to Family WhatsApp'}
             </button>
             <button
@@ -86,7 +85,7 @@ export const RunSheetTab: FC<RunSheetTabProps> = ({ plan, dispatch }) => {
         {/* 3 Metrics */}
         <div className="grid grid-cols-3 gap-3 py-3 border-y border-stone-100 dark:border-stone-800 text-center">
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+            <span className="text-[11px] font-semibold text-stone-600 dark:text-stone-400 uppercase tracking-wider">
               Total Blocks
             </span>
             <p className="text-xl font-extrabold text-stone-900 dark:text-stone-100">
@@ -94,16 +93,20 @@ export const RunSheetTab: FC<RunSheetTabProps> = ({ plan, dispatch }) => {
             </p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-amber-500 uppercase tracking-wider">
+            <span className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
               In Progress
             </span>
-            <p className="text-xl font-extrabold text-amber-600">{inProgressCount}</p>
+            <p className="text-xl font-extrabold text-amber-700 dark:text-amber-400">
+              {inProgressCount}
+            </p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-emerald-500 uppercase tracking-wider">
+            <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
               Completed
             </span>
-            <p className="text-xl font-extrabold text-emerald-600">{completedCount}</p>
+            <p className="text-xl font-extrabold text-emerald-700 dark:text-emerald-400">
+              {completedCount}
+            </p>
           </div>
         </div>
       </section>
@@ -121,7 +124,7 @@ export const RunSheetTab: FC<RunSheetTabProps> = ({ plan, dispatch }) => {
             <button
               type="button"
               onClick={() => setShowAddModal(false)}
-              className="text-xs text-stone-400 hover:text-stone-600"
+              className="text-xs text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-stone-100 underline min-h-[28px] px-2 rounded"
             >
               Cancel
             </button>
@@ -250,20 +253,22 @@ export const RunSheetTab: FC<RunSheetTabProps> = ({ plan, dispatch }) => {
                     <h5
                       className={`font-bold text-base ${
                         isCompleted
-                          ? 'line-through text-stone-400 dark:text-stone-500'
+                          ? 'line-through text-stone-600 dark:text-stone-400'
                           : 'text-stone-900 dark:text-stone-100'
                       }`}
                     >
                       {item.title}
                     </h5>
                     {item.description && (
-                      <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+                      <p className="text-xs text-stone-600 dark:text-stone-400 mt-0.5">
                         {item.description}
                       </p>
                     )}
                     {item.coordinator && (
-                      <p className="text-xs text-brand-600 dark:text-brand-400 font-semibold mt-1 flex items-center gap-1">
-                        <span>👤 In-Charge:</span>
+                      <p className="text-xs text-brand-700 dark:text-brand-400 font-semibold mt-1 flex items-center gap-1">
+                        <span>
+                          <span aria-hidden="true">👤</span> In-Charge:
+                        </span>
                         <span>{item.coordinator}</span>
                       </p>
                     )}
@@ -276,9 +281,9 @@ export const RunSheetTab: FC<RunSheetTabProps> = ({ plan, dispatch }) => {
                   onClick={() => dispatch({ type: 'cycleRunSheet', itemId: item.id })}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
                     isCompleted
-                      ? 'bg-emerald-600 text-white'
+                      ? 'bg-emerald-700 text-white'
                       : isInProgress
-                        ? 'bg-amber-500 text-white animate-pulse'
+                        ? 'bg-amber-700 text-white animate-pulse'
                         : 'border border-stone-300 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:border-brand-500'
                   }`}
                 >

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "src/engine/index.ts",
+    "src/lib/sanitize.ts",
+    "src/lib/api.ts",
+    "src/lib/ids.ts",
+    "src/state/planStore.ts"
+  ],
+  "out": "docs/api",
+  "tsconfig": "tsconfig.json",
+  "name": "Prabandh engine, state and lib API",
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "skipErrorChecking": true,
+  "readme": "none",
+  "githubPages": false
+}

@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { requireDefined } from '../helpers';
 import {
   aggregateGuests,
   syncGuestCountWithList,
@@ -85,7 +86,7 @@ describe('guests.ts', () => {
       runSheet: [],
     };
 
-    const text = formatGuestWhatsappInvite(sampleGuests[0]!, plan);
+    const text = formatGuestWhatsappInvite(requireDefined(sampleGuests[0]), plan);
     expect(text).toContain('Namaste Sharma Family!');
     expect(text).toContain('Grand Wedding');
     expect(text).toContain('Pune');

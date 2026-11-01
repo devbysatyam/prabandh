@@ -9,6 +9,15 @@ import {
 import { formatINR } from './money';
 import { OCCASION_LABELS } from './presets';
 
+/**
+ * Result of comparing a vendor quote with its category budget, including risk flags.
+ *
+ * @example
+ * ```ts
+ * const c = compareQuoteToBudget(quote, 300000, 200);
+ * c.flags.filter((f) => f.type === 'warn');
+ * ```
+ */
 export interface QuoteComparison {
   effectiveCost: number;
   categoryBudget: number;
@@ -21,6 +30,15 @@ export interface QuoteComparison {
   }[];
 }
 
+/**
+ * Payment progress for a vendor contract.
+ *
+ * @example
+ * ```ts
+ * const p = calculateVendorPayments(vendor);
+ * p.balanceRemaining;
+ * ```
+ */
 export interface PaymentSummary {
   totalAgreed: number;
   totalPaid: number;
@@ -33,8 +51,24 @@ export interface PaymentSummary {
   } | null;
 }
 
+/**
+ * Sourcing stage of a vendor category.
+ *
+ * @example
+ * ```ts
+ * const s: ChecklistStatus = 'quoted';
+ * ```
+ */
 export type ChecklistStatus = 'not_started' | 'contacted' | 'quoted' | 'booked';
 
+/**
+ * One row of the vendor sourcing checklist.
+ *
+ * @example
+ * ```ts
+ * vendorChecklist(plan)[0]?.status; // => 'not_started'
+ * ```
+ */
 export interface VendorChecklistItem {
   category: Category;
   label: string;
@@ -85,7 +119,15 @@ const VENDOR_CATEGORY_HINTS: Record<Occasion, Record<Category, string>> = {
 };
 
 /**
- * Calculates effective vendor quote cost based on fixed total or per-plate multiplied by guest count.
+ * Effective cost of a quote: the fixed total, or per-plate price x billable guests.
+ *
+ * @param quote - The vendor quote.
+ * @param guestCount - Current guest count (raised to the vendor minimum for per-plate pricing).
+ * @returns Cost in rupees; 0 when the quote has no usable price.
+ * @example
+ * ```ts
+ * effectiveQuoteCost({ ...quote, totalPrice: null, pricePerPlate: 1200, guestMinimum: 150 }, 100); // => 180000
+ * ```
  */
 export function effectiveQuoteCost(quote: Quote, guestCount: number): number {
   if (quote.totalPrice !== null && quote.totalPrice > 0) {
@@ -98,8 +140,43 @@ export function effectiveQuoteCost(quote: Quote, guestCount: number): number {
   return 0;
 }
 
+/** Over-budget warning or within-budget confirmation for a quote; null when neither applies. */
+function varianceFlag(
+  variance: number,
+  categoryBudget: number,
+  effectiveCost: number,
+): QuoteComparison['flags'][number] | null {
+  if (variance > 0) {
+    const pct = categoryBudget > 0 ? Math.round((variance / categoryBudget) * 100) : 100;
+    const budgetText = categoryBudget > 0 ? formatINR(categoryBudget) : 'zero';
+    return {
+      type: 'warn',
+      code: 'OVER_BUDGET',
+      message: `Quote is ${formatINR(variance)} (${pct}%) above the ${budgetText} allocated budget.`,
+    };
+  }
+  if (variance < 0 && effectiveCost > 0) {
+    return {
+      type: 'good',
+      code: 'WITHIN_BUDGET',
+      message: `Quote is comfortably within budget (leaves ${formatINR(-variance)} buffer).`,
+    };
+  }
+  return null;
+}
+
 /**
- * Evaluates a vendor quote against category budget and flags potential contractual risks.
+ * Evaluates a quote against the category budget and flags contractual risks
+ * (over budget, minimum guarantee, high advance, tax clarity, cancellation terms).
+ *
+ * @param quote - The vendor quote.
+ * @param categoryBudget - Rupees allocated to the quote category.
+ * @param guestCount - Current guest count.
+ * @returns Effective cost, variance and ordered warning / info / good flags.
+ * @example
+ * ```ts
+ * compareQuoteToBudget(quote, 300000, 200).flags.map((f) => f.code); // => ['OVER_BUDGET', 'TAX_UNSPECIFIED']
+ * ```
  */
 export function compareQuoteToBudget(
   quote: Quote,
@@ -111,20 +188,8 @@ export function compareQuoteToBudget(
   const isOverBudget = variance > 0;
   const flags: QuoteComparison['flags'] = [];
 
-  // Budget variance
-  if (isOverBudget) {
-    flags.push({
-      type: 'warn',
-      code: 'OVER_BUDGET',
-      message: `Quote is ${formatINR(variance)} (${categoryBudget > 0 ? Math.round((variance / categoryBudget) * 100) : 100}%) above the ${categoryBudget > 0 ? formatINR(categoryBudget) : 'zero'} allocated budget.`,
-    });
-  } else if (variance < 0 && effectiveCost > 0) {
-    flags.push({
-      type: 'good',
-      code: 'WITHIN_BUDGET',
-      message: `Quote is comfortably within budget (leaves ${formatINR(-variance)} buffer).`,
-    });
-  }
+  const budgetFlag = varianceFlag(variance, categoryBudget, effectiveCost);
+  if (budgetFlag) flags.push(budgetFlag);
 
   // Minimum guarantee risk
   if (quote.guestMinimum !== null && quote.guestMinimum > guestCount) {
@@ -180,7 +245,14 @@ export function compareQuoteToBudget(
 }
 
 /**
- * Computes payment schedules, advances paid, and upcoming installments across vendor contracts.
+ * Computes agreed total, amount paid, balance and next due milestone for a vendor.
+ *
+ * @param vendor - Vendor with its payment milestones and optional quote.
+ * @returns Payment summary; `nextMilestone` is the first unpaid milestone or `null`.
+ * @example
+ * ```ts
+ * calculateVendorPayments(vendor).paidPercentage; // => 25
+ * ```
  */
 export function calculateVendorPayments(vendor: Vendor): PaymentSummary {
   const quoteCost = vendor.quote?.totalPrice ?? 0;
@@ -215,7 +287,18 @@ export function calculateVendorPayments(vendor: Vendor): PaymentSummary {
 }
 
 /**
- * Formats a polite, respectful vendor inquiry / negotiation message for WhatsApp.
+ * Formats a polite WhatsApp negotiation message covering the open points in a quote.
+ *
+ * @param vendorName - Vendor name (falls back to "Ji").
+ * @param category - Budget category being discussed.
+ * @param quote - The vendor quote.
+ * @param guestCount - Current guest count.
+ * @param eventDate - Event date (YYYY-MM-DD).
+ * @returns Message with one numbered question per missing term (tax, cancellation, advance, minimum).
+ * @example
+ * ```ts
+ * generateVendorInquiry('Royal Caterers', 'catering', quote, 180, '2027-02-14').startsWith('Namaste Royal Caterers!'); // => true
+ * ```
  */
 export function generateVendorInquiry(
   vendorName: string,
@@ -251,36 +334,57 @@ export function generateVendorInquiry(
 }
 
 /**
- * Derives comprehensive vendor checklist status across all non-contingency categories.
+ * Derives the sourcing checklist (not started / contacted / quoted / booked) for every bookable category.
+ *
+ * @param plan - The current plan.
+ * @returns One item per non-contingency category with label, hint, status and quote counts.
+ * @example
+ * ```ts
+ * vendorChecklist(plan).find((i) => i.category === 'venue')?.status; // => 'booked'
+ * ```
  */
 export function vendorChecklist(plan: Plan): VendorChecklistItem[] {
   const bookableCategories = CATEGORIES.filter((c) => c !== 'contingency');
   const labels = OCCASION_LABELS[plan.occasion];
   const hints = VENDOR_CATEGORY_HINTS[plan.occasion];
 
-  return bookableCategories.map((cat) => {
-    const matchingVendors = plan.vendors.filter((v) => v.category === cat);
-    const matchingQuotes = (plan.quotes ?? []).filter((q) => q.category === cat);
-    const hasBooked =
-      matchingVendors.some((v) => v.status === 'booked') || matchingQuotes.some((q) => q.accepted);
-    const hasQuoted =
-      matchingQuotes.length > 0 || matchingVendors.some((v) => v.status === 'quoted' || v.quote);
-    const isContacted =
-      plan.contacted?.includes(cat) || matchingVendors.some((v) => v.status === 'contacted');
+  return bookableCategories.map((cat) => checklistItem(plan, cat, labels[cat], hints[cat]));
+}
 
-    let status: ChecklistStatus = 'not_started';
-    if (hasBooked) status = 'booked';
-    else if (hasQuoted) status = 'quoted';
-    else if (isContacted) status = 'contacted';
+/** Furthest sourcing stage reached: booked > quoted > contacted > not started. */
+function checklistStatus(
+  hasBooked: boolean,
+  hasQuoted: boolean,
+  isContacted: boolean | undefined,
+): ChecklistStatus {
+  if (hasBooked) return 'booked';
+  if (hasQuoted) return 'quoted';
+  return isContacted ? 'contacted' : 'not_started';
+}
 
-    return {
-      category: cat,
-      label: labels[cat],
-      hint: hints[cat],
-      status,
-      quotesCount: matchingQuotes.length + matchingVendors.filter((v) => v.quote).length,
-      hasAcceptedQuote: hasBooked,
-      contacted: isContacted || hasQuoted || hasBooked,
-    };
-  });
+/** Build the checklist row for a single category. */
+function checklistItem(
+  plan: Plan,
+  cat: Category,
+  label: string,
+  hint: string,
+): VendorChecklistItem {
+  const matchingVendors = plan.vendors.filter((v) => v.category === cat);
+  const matchingQuotes = (plan.quotes ?? []).filter((q) => q.category === cat);
+  const hasBooked =
+    matchingVendors.some((v) => v.status === 'booked') || matchingQuotes.some((q) => q.accepted);
+  const hasQuoted =
+    matchingQuotes.length > 0 || matchingVendors.some((v) => v.status === 'quoted' || v.quote);
+  const isContacted =
+    plan.contacted?.includes(cat) || matchingVendors.some((v) => v.status === 'contacted');
+
+  return {
+    category: cat,
+    label,
+    hint,
+    status: checklistStatus(hasBooked, hasQuoted, isContacted),
+    quotesCount: matchingQuotes.length + matchingVendors.filter((v) => v.quote).length,
+    hasAcceptedQuote: hasBooked,
+    contacted: isContacted || hasQuoted || hasBooked,
+  };
 }

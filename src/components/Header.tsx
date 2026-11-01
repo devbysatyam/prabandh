@@ -1,3 +1,4 @@
+import { useCopyToClipboard } from '../hooks/useCopyToClipboard';
 import { useState, type FC } from 'react';
 import type { Plan } from '../schemas';
 import { Icon } from './Icon';
@@ -14,7 +15,8 @@ interface HeaderProps {
 }
 
 export const Header: FC<HeaderProps> = ({ plan, today, onReset, onOpenWhatsAppModal }) => {
-  const [copiedShare, setCopiedShare] = useState(false);
+  const { copiedKey, copy } = useCopyToClipboard();
+  const copiedShare = copiedKey !== null;
   const [darkMode, setDarkMode] = useState(false);
 
   function toggleDark() {
@@ -30,10 +32,7 @@ export const Header: FC<HeaderProps> = ({ plan, today, onReset, onOpenWhatsAppMo
   function handleShareLink() {
     if (!plan) return;
     const url = encodePlanShareLink(plan);
-    navigator.clipboard.writeText(url).then(() => {
-      setCopiedShare(true);
-      setTimeout(() => setCopiedShare(false), 2500);
-    });
+    copy(url);
   }
 
   function handleDownloadCalendar() {
@@ -58,20 +57,25 @@ export const Header: FC<HeaderProps> = ({ plan, today, onReset, onOpenWhatsAppMo
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
         {/* Brand identity */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-gold-500 flex items-center justify-center text-white shadow-sm shadow-brand-500/20">
-            <span className="font-serif text-xl font-bold">प्र</span>
+          <div
+            aria-hidden="true"
+            className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-gold-700 flex items-center justify-center text-white shadow-sm shadow-brand-500/20"
+          >
+            <span lang="hi" className="font-serif text-xl font-bold">
+              प्र
+            </span>
           </div>
           <div>
             <div className="flex items-center gap-2">
               <h1 className="font-bold text-stone-900 dark:text-stone-50 tracking-tight text-lg sm:text-xl">
                 Prabandh{' '}
-                <span className="text-brand-600 dark:text-brand-400 font-extrabold text-sm uppercase px-1.5 py-0.5 rounded bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-800">
-                  प्रबंध
+                <span className="text-brand-700 dark:text-brand-400 font-extrabold text-sm uppercase px-1.5 py-0.5 rounded bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-800">
+                  <span lang="hi">प्रबंध</span>
                 </span>
               </h1>
             </div>
-            <p className="text-xs text-stone-500 dark:text-stone-400 font-medium">
-              प्रबंध · Connected Indian Celebration Architecture
+            <p className="text-xs text-stone-600 dark:text-stone-400 font-medium">
+              <span lang="hi">प्रबंध</span> · Connected Indian Celebration Architecture
             </p>
           </div>
         </div>
@@ -80,7 +84,10 @@ export const Header: FC<HeaderProps> = ({ plan, today, onReset, onOpenWhatsAppMo
         {plan && (
           <div className="hidden lg:flex items-center gap-2.5">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-200">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span
+                aria-hidden="true"
+                className="w-2 h-2 rounded-full bg-emerald-500 motion-safe:animate-pulse"
+              ></span>
               {daysLeft > 0 ? `${daysLeft} days to go` : 'Celebration Day!'}
             </span>
             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
@@ -102,10 +109,11 @@ export const Header: FC<HeaderProps> = ({ plan, today, onReset, onOpenWhatsAppMo
               <button
                 type="button"
                 onClick={onOpenWhatsAppModal}
-                className="btn-quiet text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/50"
+                className="btn-quiet text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/50"
                 title="Send update to family WhatsApp group"
+                aria-label="Send update to family WhatsApp group"
               >
-                <Icon name="whatsapp" className="w-4 h-4 text-emerald-500" />
+                <Icon name="whatsapp" className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
                 <span className="hidden sm:inline">WhatsApp</span>
               </button>
 
@@ -115,6 +123,7 @@ export const Header: FC<HeaderProps> = ({ plan, today, onReset, onOpenWhatsAppMo
                 onClick={handleDownloadCalendar}
                 className="btn-quiet text-stone-700 dark:text-stone-300"
                 title="Download .ics calendar"
+                aria-label="Download .ics calendar"
               >
                 <Icon name="calendar" className="w-4 h-4" />
                 <span className="hidden md:inline">Calendar</span>
@@ -137,6 +146,7 @@ export const Header: FC<HeaderProps> = ({ plan, today, onReset, onOpenWhatsAppMo
                 onClick={() => window.print()}
                 className="btn-quiet text-stone-700 dark:text-stone-300"
                 title="Print plan summary"
+                aria-label="Print plan summary"
               >
                 <Icon name="print" className="w-4 h-4" />
                 <span className="hidden md:inline">Print</span>
@@ -152,6 +162,7 @@ export const Header: FC<HeaderProps> = ({ plan, today, onReset, onOpenWhatsAppMo
                 }}
                 className="btn-quiet text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40"
                 title="Reset Plan"
+                aria-label="Reset Plan"
               >
                 <Icon name="reset" className="w-4 h-4" />
                 <span className="hidden xl:inline">Reset</span>
@@ -159,12 +170,17 @@ export const Header: FC<HeaderProps> = ({ plan, today, onReset, onOpenWhatsAppMo
             </>
           )}
 
+          <span role="status" aria-live="polite" className="sr-only">
+            {copiedShare ? 'Share link copied to clipboard' : ''}
+          </span>
+
           {/* Dark mode toggle */}
           <button
             type="button"
             onClick={toggleDark}
-            className="p-2 rounded-xl text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition"
-            aria-label="Toggle theme"
+            className="p-2.5 min-w-[40px] min-h-[40px] inline-flex items-center justify-center rounded-xl text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition"
+            aria-label="Dark mode"
+            aria-pressed={darkMode}
           >
             <Icon name={darkMode ? 'sun' : 'moon'} className="w-4 h-4" />
           </button>

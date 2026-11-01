@@ -30,8 +30,7 @@ npm run preview
 
 ## 3. Environment Variables Reference
 
-| Variable              | Required | Default                 | Description                                               |
-| --------------------- | -------- | ----------------------- | --------------------------------------------------------- |
-| `GEMINI_API_KEY`      | Optional | Built-in fallback       | Google Gemini API key for live language parsing & copilot |
-| `GEMINI_MODEL`        | Optional | `gemini-3.5-flash-lite` | Gemini model name                                         |
-| `VITE_GEMINI_API_KEY` | Optional | -                       | Optional client-side key for client-directed calls        |
+| Variable         | Required | Default                 | Description                                               |
+| ---------------- | -------- | ----------------------- | --------------------------------------------------------- |
+| `GEMINI_API_KEY` | Optional | None (local engine)     | Google Gemini API key for live language parsing & copilot |
+| `GEMINI_MODEL`   | Optional | `gemini-3.5-flash-lite` | Gemini model name                                         |

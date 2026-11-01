@@ -1,39 +1,21 @@
-import { useState, useEffect, type FC } from 'react';
-import type { IdeasResponse, Plan } from '../schemas';
+import type { FC } from 'react';
+import type { Plan } from '../schemas';
 import { Icon } from './Icon';
-import { api } from '../lib/api';
+import { useCopyToClipboard } from '../hooks/useCopyToClipboard';
+import { useIdeas } from './useIdeas';
 
 interface IdeasTabProps {
   plan: Plan;
 }
 
+/** Occasion-tuned themes, activities, food styles and invitation wording. */
 export const IdeasTab: FC<IdeasTabProps> = ({ plan }) => {
-  const [ideas, setIdeas] = useState<IdeasResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [copiedInvite, setCopiedInvite] = useState(false);
-
-  async function loadIdeas() {
-    setLoading(true);
-    try {
-      const res = await api.suggestIdeas(plan.occasion, plan.vibe, plan.guests, plan.totalBudget);
-      setIdeas(res);
-    } catch {
-      // Fallback handled by handler
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    void loadIdeas();
-  }, [plan.occasion, plan.vibe]);
+  const { ideas, loading, regenerate } = useIdeas(plan);
+  const { copiedKey, copy } = useCopyToClipboard();
+  const copiedInvite = copiedKey !== null;
 
   function handleCopyInvite() {
-    if (!ideas?.invitationLine) return;
-    navigator.clipboard.writeText(ideas.invitationLine).then(() => {
-      setCopiedInvite(true);
-      setTimeout(() => setCopiedInvite(false), 2500);
-    });
+    if (ideas?.invitationLine) copy(ideas.invitationLine);
   }
 
   return (
@@ -42,10 +24,10 @@ export const IdeasTab: FC<IdeasTabProps> = ({ plan }) => {
       <section className="card flex flex-wrap items-center justify-between gap-3">
         <div>
           <h3 className="font-bold text-stone-900 dark:text-stone-100 text-base flex items-center gap-2">
-            <Icon name="sparkle" className="w-5 h-5 text-brand-600" />
+            <Icon name="sparkle" className="w-5 h-5 text-brand-700 dark:text-brand-400" />
             Curated Inspiration & Personal Touches
           </h3>
-          <p className="text-xs text-stone-500 dark:text-stone-400">
+          <p className="text-xs text-stone-600 dark:text-stone-400">
             Occasion-tuned themes, authentic food styles, interactive activities, and invitation
             wording. (No commercial prices or brand sponsorships).
           </p>
@@ -53,14 +35,17 @@ export const IdeasTab: FC<IdeasTabProps> = ({ plan }) => {
 
         <button
           type="button"
-          onClick={loadIdeas}
+          onClick={regenerate}
           disabled={loading}
           className="btn-secondary text-xs flex items-center gap-1.5"
         >
           {loading ? (
-            <span className="w-3.5 h-3.5 border-2 border-stone-400 border-t-transparent rounded-full animate-spin" />
+            <span
+              aria-hidden="true"
+              className="w-3.5 h-3.5 border-2 border-stone-400 border-t-transparent rounded-full animate-spin"
+            />
           ) : (
-            <Icon name="sparkle" className="w-3.5 h-3.5 text-brand-600" />
+            <Icon name="sparkle" className="w-3.5 h-3.5 text-brand-700 dark:text-brand-400" />
           )}
           {loading ? 'Curating Ideas...' : 'Regenerate Ideas'}
         </button>
@@ -80,7 +65,7 @@ export const IdeasTab: FC<IdeasTabProps> = ({ plan }) => {
               <button
                 type="button"
                 onClick={handleCopyInvite}
-                className="btn-quiet text-brand-600 dark:text-brand-400 font-semibold"
+                className="btn-quiet text-brand-700 dark:text-brand-400 font-semibold"
               >
                 {copiedInvite ? '✓ Copied Wording' : 'Copy Invitation Text'}
               </button>
@@ -98,7 +83,9 @@ export const IdeasTab: FC<IdeasTabProps> = ({ plan }) => {
                   key={i}
                   className="p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/40 dark:bg-stone-900/40 hover:border-brand-400 transition"
                 >
-                  <span className="text-brand-600 text-xs font-bold">Concept {i + 1}</span>
+                  <span className="text-brand-700 dark:text-brand-400 text-xs font-bold">
+                    Concept {i + 1}
+                  </span>
                   <h5 className="font-bold text-sm text-stone-900 dark:text-stone-100 mt-0.5">
                     {theme.title}
                   </h5>
@@ -123,7 +110,9 @@ export const IdeasTab: FC<IdeasTabProps> = ({ plan }) => {
                     key={i}
                     className="text-xs text-stone-700 dark:text-stone-300 flex items-start gap-2"
                   >
-                    <span className="text-brand-600 mt-0.5">🍲</span>
+                    <span className="text-brand-700 dark:text-brand-400 mt-0.5" aria-hidden="true">
+                      🍲
+                    </span>
                     <span>{dish}</span>
                   </li>
                 ))}
@@ -141,7 +130,12 @@ export const IdeasTab: FC<IdeasTabProps> = ({ plan }) => {
                     key={i}
                     className="text-xs text-stone-700 dark:text-stone-300 flex items-start gap-2"
                   >
-                    <span className="text-indigo-500 mt-0.5">✨</span>
+                    <span
+                      className="text-indigo-600 dark:text-indigo-400 mt-0.5"
+                      aria-hidden="true"
+                    >
+                      ✨
+                    </span>
                     <span>{act}</span>
                   </li>
                 ))}

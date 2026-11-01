@@ -1,5 +1,14 @@
 import type { VenueDetail } from '../schemas';
 
+/**
+ * Capacity fit, cost and policy notes for a shortlisted venue.
+ *
+ * @example
+ * ```ts
+ * const e = evaluateVenue(venue, 200);
+ * e.capacityStatus; // => 'optimal'
+ * ```
+ */
 export interface VenueEvaluation {
   venue: VenueDetail;
   capacityStatus: 'optimal' | 'cramped' | 'excessive';
@@ -10,7 +19,15 @@ export interface VenueEvaluation {
 }
 
 /**
- * Evaluates a venue's capacity, cost, and policies against target guest count.
+ * Evaluates a venue's capacity, cost and policies against the target guest count.
+ *
+ * @param venue - Venue details.
+ * @param guestCount - Target guest count.
+ * @returns Capacity status and message, rental + deposit total and policy notes.
+ * @example
+ * ```ts
+ * evaluateVenue({ ...venue, capacityMax: 150 }, 200).isSuitableForGuests; // => false
+ * ```
  */
 export function evaluateVenue(venue: VenueDetail, guestCount: number): VenueEvaluation {
   let capacityStatus: 'optimal' | 'cramped' | 'excessive' = 'optimal';
@@ -70,6 +87,16 @@ export function evaluateVenue(venue: VenueDetail, guestCount: number): VenueEval
 
 /**
  * Generates ready-to-send WhatsApp enquiry text for a shortlisted venue.
+ *
+ * @param venue - Venue being enquired about.
+ * @param eventDate - Event date (YYYY-MM-DD).
+ * @param guestCount - Expected guests.
+ * @param eventTitle - Event title.
+ * @returns A courteous multi-line enquiry message.
+ * @example
+ * ```ts
+ * formatVenueWhatsappInquiry(venue, '2027-02-14', 200, 'Wedding').startsWith('Namaste Management'); // => true
+ * ```
  */
 export function formatVenueWhatsappInquiry(
   venue: VenueDetail,

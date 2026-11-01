@@ -4,7 +4,14 @@
  */
 
 /**
- * Formats a number of rupees into Indian comma grouped string, e.g. ₹8,00,000.
+ * Formats rupees with Indian digit grouping.
+ *
+ * @param rupees - Amount in rupees (rounded to the nearest integer; NaN / Infinity yield 0).
+ * @returns A string such as `₹8,00,000` (with a leading `-` for negatives).
+ * @example
+ * ```ts
+ * formatINR(800000); // => '₹8,00,000'
+ * ```
  */
 export function formatINR(rupees: number): string {
   if (isNaN(rupees) || !isFinite(rupees)) return '₹0';
@@ -24,8 +31,15 @@ export function formatINR(rupees: number): string {
 }
 
 /**
- * Converts integer rupees into compact Lakh / Crore human-readable string.
- * e.g. 850000 -> "₹8.5 Lakh", 25000000 -> "₹2.5 Crore", 75000 -> "₹75 Thousand"
+ * Converts rupees into a compact Thousand / Lakh / Crore string.
+ *
+ * @param rupees - Amount in rupees.
+ * @returns Compact text, falling back to {@link formatINR} below one thousand.
+ * @example
+ * ```ts
+ * toLakh(850000); // => '₹8.5 Lakh'
+ * toLakh(25000000); // => '₹2.5 Crore'
+ * ```
  */
 export function toLakh(rupees: number): string {
   const abs = Math.abs(rupees);
@@ -44,9 +58,33 @@ export function toLakh(rupees: number): string {
   return formatINR(rupees);
 }
 
+/** Unit suffixes understood by {@link parseINR}: crore, lakh and thousand. */
+const UNIT_PATTERNS: { pattern: RegExp; multiplier: number }[] = [
+  { pattern: /^([\d.]+)\s*(?:crore|crores|cr)$/, multiplier: 10_000_000 },
+  { pattern: /^([\d.]+)\s*(?:lakh|lakhs|lac|lacs|l)$/, multiplier: 100_000 },
+  { pattern: /^([\d.]+)\s*(?:k|thousand|thousands)$/, multiplier: 1_000 },
+];
+
+/** Parse "<number> <unit>" text (crore / lakh / thousand); null when no unit pattern matches. */
+function parseUnitAmount(text: string): number | null {
+  for (const { pattern, multiplier } of UNIT_PATTERNS) {
+    const raw = pattern.exec(text)?.[1];
+    const val = raw ? parseFloat(raw) : NaN;
+    if (!isNaN(val) && val >= 0) return Math.round(val * multiplier);
+  }
+  return null;
+}
+
 /**
- * Robust, forgiving parser for user typed amounts.
- * Handles: "8 lakh", "8.5L", "2 crore", "2.5 cr", "₹8,00,000", "800000", "50k", etc.
+ * Forgiving parser for user-typed amounts: "8 lakh", "8.5L", "2 cr", "₹8,00,000", "50k", "800000".
+ *
+ * @param input - Free-form amount text.
+ * @returns Whole rupees, or `null` when the text is not a non-negative amount.
+ * @example
+ * ```ts
+ * parseINR('8.5 lakh'); // => 850000
+ * parseINR('abc'); // => null
+ * ```
  */
 export function parseINR(input: string): number | null {
   if (!input || typeof input !== 'string') return null;
@@ -59,26 +97,8 @@ export function parseINR(input: string): number | null {
     .trim();
   if (!text) return null;
 
-  // Crore match: e.g. "2.5 crore", "2cr", "1.2crores"
-  const crMatch = /^([\d.]+)\s*(?:crore|crores|cr)$/.exec(text);
-  if (crMatch && crMatch[1]) {
-    const val = parseFloat(crMatch[1]);
-    if (!isNaN(val) && val >= 0) return Math.round(val * 10_000_000);
-  }
-
-  // Lakh match: e.g. "8.5 lakh", "8l", "8.5 lac", "12lakhs"
-  const lakhMatch = /^([\d.]+)\s*(?:lakh|lakhs|lac|lacs|l)$/.exec(text);
-  if (lakhMatch && lakhMatch[1]) {
-    const val = parseFloat(lakhMatch[1]);
-    if (!isNaN(val) && val >= 0) return Math.round(val * 100_000);
-  }
-
-  // Thousand match: e.g. "50k", "75 thousand"
-  const kMatch = /^([\d.]+)\s*(?:k|thousand|thousands)$/.exec(text);
-  if (kMatch && kMatch[1]) {
-    const val = parseFloat(kMatch[1]);
-    if (!isNaN(val) && val >= 0) return Math.round(val * 1_000);
-  }
+  const withUnit = parseUnitAmount(text);
+  if (withUnit !== null) return withUnit;
 
   // Pure number
   const num = parseFloat(text);
@@ -89,9 +109,28 @@ export function parseINR(input: string): number | null {
   return null;
 }
 
+/** Split `total` as evenly as possible across `keys` (first keys receive the leftover rupees). */
+function splitEqually<K extends string>(keys: K[], total: number): Record<K, number> {
+  const equalShare = Math.floor(total / keys.length);
+  const remainder = total % keys.length;
+  const res = {} as Record<K, number>;
+  keys.forEach((key, i) => {
+    res[key] = equalShare + (i < remainder ? 1 : 0);
+  });
+  return res;
+}
+
 /**
- * Largest Remainder (Hare-Niemeyer) rounding method.
- * Guarantees that rounded integer categories sum EXACTLY to targetTotal with zero rounding drift.
+ * Largest Remainder (Hare-Niemeyer) rounding: splits `targetTotal` in proportion to `proportions`
+ * so the rounded integers sum EXACTLY to the target with zero drift.
+ *
+ * @param proportions - Non-negative weights keyed by name.
+ * @param targetTotal - Integer total to distribute.
+ * @returns Integer share per key; all zeros for a non-positive target, an equal split for all-zero weights.
+ * @example
+ * ```ts
+ * largestRemainderRound({ a: 1, b: 1, c: 1 }, 100); // => { a: 34, b: 33, c: 33 }
+ * ```
  */
 export function largestRemainderRound<K extends string>(
   proportions: Record<K, number>,
@@ -105,16 +144,9 @@ export function largestRemainderRound<K extends string>(
     return zeroResult;
   }
 
-  const rawSum = keys.reduce((sum, k) => sum + proportions[k]!, 0);
+  const rawSum = keys.reduce((sum, k) => sum + proportions[k], 0);
   if (rawSum === 0) {
-    const equalShare = Math.floor(targetTotal / keys.length);
-    let remainder = targetTotal % keys.length;
-    const res = {} as Record<K, number>;
-    for (const key of keys) {
-      res[key] = equalShare + (remainder > 0 ? 1 : 0);
-      if (remainder > 0) remainder--;
-    }
-    return res;
+    return splitEqually(keys, targetTotal);
   }
 
   // Calculate integer parts and fractional remainders
@@ -123,7 +155,7 @@ export function largestRemainderRound<K extends string>(
   let currentSum = 0;
 
   for (const key of keys) {
-    const exact = (proportions[key]! / rawSum) * targetTotal;
+    const exact = (proportions[key] / rawSum) * targetTotal;
     const floor = Math.floor(exact);
     floors[key] = floor;
     currentSum += floor;
@@ -136,7 +168,7 @@ export function largestRemainderRound<K extends string>(
 
   for (const item of remainders) {
     if (deficit <= 0) break;
-    floors[item.key]! += 1;
+    floors[item.key] += 1;
     deficit--;
   }
 

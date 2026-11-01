@@ -3,7 +3,8 @@ import type { Plan } from '../schemas';
 import type { TabId } from './Navigation';
 import { Icon } from './Icon';
 import { computeCelebrationAnalytics } from '../engine/analytics';
-import { formatINR, toLakh } from '../engine/money';
+import { formatINR } from '../engine/money';
+import { AnalyticsHero } from './analytics/AnalyticsHero';
 
 interface AnalyticsTabProps {
   plan: Plan;
@@ -11,179 +12,22 @@ interface AnalyticsTabProps {
   onNavigate: (tab: TabId) => void;
 }
 
+/** Event intelligence: readiness, unit economics and prioritised recommendations. */
 export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate }) => {
   const analytics = useMemo(() => computeCelebrationAnalytics(plan, today), [plan, today]);
-  const { readiness, budgetStatus: bStatus, guestSummary: gSummary } = analytics;
-
-  const tierColors = {
-    excellent:
-      'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800',
-    on_track:
-      'text-brand-600 bg-brand-50 dark:bg-brand-950/40 border-brand-300 dark:border-brand-800',
-    needs_attention:
-      'text-amber-600 bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800',
-    critical: 'text-red-600 bg-red-50 dark:bg-red-950/40 border-red-300 dark:border-red-800',
-  };
-
-  const tierLabels = {
-    excellent: 'Excellent Readiness (उत्कृष्ट तैयारी)',
-    on_track: 'On Track (योजना अनुसार)',
-    needs_attention: 'Needs Attention (ध्यान देने योग्य)',
-    critical: 'Action Required (तुरंत कार्रवाई)',
-  };
+  const { guestSummary: gSummary } = analytics;
 
   return (
     <div className="space-y-6">
-      {/* Top Header Card */}
-      <section className="card bg-gradient-to-br from-stone-900 to-stone-800 text-white dark:from-stone-900 dark:to-stone-950 p-6 border-none shadow-xl">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-brand-500/20 text-brand-300 border border-brand-500/30 mb-2">
-              <Icon name="sparkle" className="w-3.5 h-3.5" />
-              Event Intelligence & Diagnostics (समारोह विश्लेषण)
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              {plan.title} — Analytics & Health
-            </h2>
-            <p className="text-stone-300 text-xs sm:text-sm mt-1 max-w-2xl">
-              Real-time celebration analytics combining financial burn rate, per-guest unit
-              economics, RSVP conversion, recce ratings, and timeline execution health.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-4 bg-stone-800/80 p-4 rounded-2xl border border-stone-700/60">
-            <div className="text-right">
-              <span className="text-[11px] uppercase tracking-wider text-stone-400 font-semibold block">
-                Overall Readiness
-              </span>
-              <span className="text-3xl font-extrabold text-white">
-                {readiness.totalScore}
-                <span className="text-lg text-stone-400 font-normal">/100</span>
-              </span>
-            </div>
-            <div
-              className={`px-3 py-1.5 rounded-xl border text-xs font-bold ${tierColors[readiness.tier]}`}
-            >
-              {tierLabels[readiness.tier]}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4 Pillar Scores Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Financial Pillar */}
-        <div className="card">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-              1. Financial Health
-            </span>
-            <span className="text-sm font-bold text-stone-900 dark:text-stone-100">
-              {readiness.budgetScore}/25
-            </span>
-          </div>
-          <p className="text-2xl font-extrabold text-stone-900 dark:text-stone-100">
-            {formatINR(analytics.perGuestCost)}
-            <span className="text-xs text-stone-400 font-normal ml-1">/ guest</span>
-          </p>
-          <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-            Total {toLakh(bStatus.total)} for {plan.guests} target guests
-          </p>
-          <div className="mt-3 w-full bg-stone-100 dark:bg-stone-800 h-2 rounded-full overflow-hidden">
-            <div
-              className={`h-full ${bStatus.isOverBudget ? 'bg-red-500' : 'bg-brand-500'}`}
-              style={{ width: `${(readiness.budgetScore / 25) * 100}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Timeline Pillar */}
-        <div className="card">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-              2. Timeline Pace
-            </span>
-            <span className="text-sm font-bold text-stone-900 dark:text-stone-100">
-              {readiness.timelineScore}/25
-            </span>
-          </div>
-          <p className="text-2xl font-extrabold text-stone-900 dark:text-stone-100">
-            {analytics.daysRemaining} Days Left
-          </p>
-          <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-            {analytics.overdueTasksCount > 0 ? (
-              <span className="text-red-500 font-bold">
-                {analytics.overdueTasksCount} tasks overdue
-              </span>
-            ) : (
-              <span className="text-emerald-500 font-semibold">Milestones on schedule</span>
-            )}
-          </p>
-          <div className="mt-3 w-full bg-stone-100 dark:bg-stone-800 h-2 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-indigo-500"
-              style={{ width: `${(readiness.timelineScore / 25) * 100}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Vendor & Recce Pillar */}
-        <div className="card">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-              3. Vendor & Recce
-            </span>
-            <span className="text-sm font-bold text-stone-900 dark:text-stone-100">
-              {readiness.vendorScore}/25
-            </span>
-          </div>
-          <p className="text-2xl font-extrabold text-stone-900 dark:text-stone-100">
-            {plan.vendors.filter((v) => v.status === 'booked').length} Booked
-          </p>
-          <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-            {analytics.siteVisitsCompleted} site visits · {analytics.vendorTastingsCompleted}{' '}
-            tastings
-          </p>
-          <div className="mt-3 w-full bg-stone-100 dark:bg-stone-800 h-2 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-amber-500"
-              style={{ width: `${(readiness.vendorScore / 25) * 100}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Guest RSVP Pillar */}
-        <div className="card">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-              4. RSVP Conversion
-            </span>
-            <span className="text-sm font-bold text-stone-900 dark:text-stone-100">
-              {readiness.guestScore}/25
-            </span>
-          </div>
-          <p className="text-2xl font-extrabold text-stone-900 dark:text-stone-100">
-            {gSummary.confirmationRate}%
-          </p>
-          <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-            {gSummary.confirmedCount} confirmed of {gSummary.totalInvitedCount} invited
-          </p>
-          <div className="mt-3 w-full bg-stone-100 dark:bg-stone-800 h-2 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-emerald-500"
-              style={{ width: `${(readiness.guestScore / 25) * 100}%` }}
-            />
-          </div>
-        </div>
-      </div>
+      <AnalyticsHero plan={plan} analytics={analytics} />
 
       {/* Priority Recommendations derived from Analytics */}
       <section className="card">
         <h3 className="font-bold text-stone-900 dark:text-stone-100 text-base mb-2 flex items-center gap-2">
-          <Icon name="sparkle" className="w-5 h-5 text-brand-600" />
+          <Icon name="sparkle" className="w-5 h-5 text-brand-700 dark:text-brand-400" />
           Analytics-Driven Priority Actions
         </h3>
-        <p className="text-xs text-stone-500 dark:text-stone-400 mb-4">
+        <p className="text-xs text-stone-600 dark:text-stone-400 mb-4">
           Automated recommendations generated deterministically by evaluating budget gaps, RSVP
           velocity, and vendor trial logs.
         </p>
@@ -212,7 +56,7 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
             <h3 className="font-bold text-stone-900 dark:text-stone-100 text-base">
               Category Allocation vs {plan.occasion.replace('_', ' ')} Benchmark
             </h3>
-            <p className="text-xs text-stone-500 dark:text-stone-400">
+            <p className="text-xs text-stone-600 dark:text-stone-400">
               Evaluates whether your allocation matches cultural best-practice proportions or skews
               heavy/lean.
             </p>
@@ -228,14 +72,29 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
+            <caption className="sr-only">
+              Budget allocation by category compared with standard benchmarks
+            </caption>
             <thead className="bg-stone-100 dark:bg-stone-800/60 text-stone-600 dark:text-stone-300 uppercase tracking-wider font-bold">
               <tr>
-                <th className="py-2.5 px-3 rounded-l-lg">Category</th>
-                <th className="py-2.5 px-3">Allocated Amount</th>
-                <th className="py-2.5 px-3">Actual Share</th>
-                <th className="py-2.5 px-3">Standard Benchmark</th>
-                <th className="py-2.5 px-3">Variance</th>
-                <th className="py-2.5 px-3 rounded-r-lg">Status</th>
+                <th scope="col" className="py-2.5 px-3 rounded-l-lg">
+                  Category
+                </th>
+                <th scope="col" className="py-2.5 px-3">
+                  Allocated Amount
+                </th>
+                <th scope="col" className="py-2.5 px-3">
+                  Actual Share
+                </th>
+                <th scope="col" className="py-2.5 px-3">
+                  Standard Benchmark
+                </th>
+                <th scope="col" className="py-2.5 px-3">
+                  Variance
+                </th>
+                <th scope="col" className="py-2.5 px-3 rounded-r-lg">
+                  Status
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100 dark:divide-stone-800/60">
@@ -250,14 +109,16 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
                   <td className="py-3 px-3 font-bold text-stone-900 dark:text-stone-100">
                     {c.allocatedPct}%
                   </td>
-                  <td className="py-3 px-3 text-stone-500">{c.benchmarkPct}%</td>
+                  <td className="py-3 px-3 text-stone-600 dark:text-stone-400">
+                    {c.benchmarkPct}%
+                  </td>
                   <td className="py-3 px-3 font-semibold">
                     {c.variancePct > 0 ? (
-                      <span className="text-brand-600">+{c.variancePct}%</span>
+                      <span className="text-brand-700 dark:text-brand-400">+{c.variancePct}%</span>
                     ) : c.variancePct < 0 ? (
                       <span className="text-indigo-600">{c.variancePct}%</span>
                     ) : (
-                      <span className="text-stone-400">0%</span>
+                      <span className="text-stone-600 dark:text-stone-400">0%</span>
                     )}
                   </td>
                   <td className="py-3 px-3">
@@ -288,7 +149,7 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
             <h4 className="font-bold text-sm text-stone-900 dark:text-stone-100">
               Dietary Preference Split
             </h4>
-            <span className="text-xs text-stone-500">
+            <span className="text-xs text-stone-600 dark:text-stone-400">
               {gSummary.totalInvitedCount} Total Guests
             </span>
           </div>
@@ -337,7 +198,7 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
                 <p className="font-bold text-xs text-stone-900 dark:text-stone-100">
                   Venue Site Visits
                 </p>
-                <p className="text-[11px] text-stone-500">
+                <p className="text-[11px] text-stone-600 dark:text-stone-400">
                   AC, green rooms, sound curfew & parking
                 </p>
               </div>
@@ -345,7 +206,7 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
                 <span className="text-lg font-extrabold text-stone-900 dark:text-stone-100">
                   {analytics.siteVisitsCompleted}
                 </span>
-                <p className="text-[10px] text-amber-500 font-bold">
+                <p className="text-[10px] text-amber-700 dark:text-amber-400 font-bold">
                   {analytics.siteVisitsAvgRating > 0
                     ? `★ ${analytics.siteVisitsAvgRating}/5.0`
                     : 'Not rated yet'}
@@ -358,7 +219,7 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
                 <p className="font-bold text-xs text-stone-900 dark:text-stone-100">
                   Vendor Tastings & Trials
                 </p>
-                <p className="text-[11px] text-stone-500">
+                <p className="text-[11px] text-stone-600 dark:text-stone-400">
                   Food tastings, makeup trials & sound checks
                 </p>
               </div>
@@ -366,7 +227,7 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
                 <span className="text-lg font-extrabold text-stone-900 dark:text-stone-100">
                   {analytics.vendorTastingsCompleted}
                 </span>
-                <p className="text-[10px] text-amber-500 font-bold">
+                <p className="text-[10px] text-amber-700 dark:text-amber-400 font-bold">
                   {analytics.vendorTastingsAvgRating > 0
                     ? `★ ${analytics.vendorTastingsAvgRating}/5.0`
                     : 'Not rated yet'}

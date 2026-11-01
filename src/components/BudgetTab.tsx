@@ -49,13 +49,16 @@ export const BudgetTab: FC<BudgetTabProps> = ({ plan, dispatch }) => {
             <h3 className="font-bold text-stone-900 dark:text-stone-100 text-base">
               Connected Budget Architecture
             </h3>
-            <p className="text-xs text-stone-500 dark:text-stone-400">
+            <p className="text-xs text-stone-600 dark:text-stone-400">
               100% deterministic integer rupee math with zero rounding drift. Drag any slider to
               redistribute.
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="edit-total-budget" className="text-xs text-stone-500">
+            <label
+              htmlFor="edit-total-budget"
+              className="text-xs text-stone-600 dark:text-stone-400"
+            >
               Edit total:
             </label>
             <input
@@ -76,42 +79,42 @@ export const BudgetTab: FC<BudgetTabProps> = ({ plan, dispatch }) => {
         {/* 4-col summary metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 py-3 border-y border-stone-100 dark:border-stone-800">
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+            <span className="text-[11px] font-semibold text-stone-600 dark:text-stone-400 uppercase tracking-wider">
               Total Allocation
             </span>
             <p className="text-xl font-extrabold text-stone-900 dark:text-stone-100">
               {formatINR(status.total)}
             </p>
-            <p className="text-[11px] text-stone-500">{toLakh(status.total)}</p>
+            <p className="text-[11px] text-stone-600 dark:text-stone-400">{toLakh(status.total)}</p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+            <span className="text-[11px] font-semibold text-stone-600 dark:text-stone-400 uppercase tracking-wider">
               Committed Contracts
             </span>
             <p className="text-xl font-extrabold text-stone-900 dark:text-stone-100">
               {formatINR(status.committed)}
             </p>
-            <p className="text-[11px] text-stone-500">
+            <p className="text-[11px] text-stone-600 dark:text-stone-400">
               {plan.vendors.filter((v) => v.status === 'booked').length} booked
             </p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+            <span className="text-[11px] font-semibold text-stone-600 dark:text-stone-400 uppercase tracking-wider">
               Estimated Pool
             </span>
             <p className="text-xl font-extrabold text-stone-900 dark:text-stone-100">
               {formatINR(status.estimated)}
             </p>
-            <p className="text-[11px] text-stone-500">Unbooked categories</p>
+            <p className="text-[11px] text-stone-600 dark:text-stone-400">Unbooked categories</p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+            <span className="text-[11px] font-semibold text-stone-600 dark:text-stone-400 uppercase tracking-wider">
               Contingency Buffer
             </span>
             <p className="text-xl font-extrabold text-stone-900 dark:text-stone-100">
               {formatINR(status.contingencyLeft)}
             </p>
-            <p className="text-[11px] text-stone-500">Fixed 10% safety pool</p>
+            <p className="text-[11px] text-stone-600 dark:text-stone-400">Fixed 10% safety pool</p>
           </div>
         </div>
 
@@ -132,7 +135,7 @@ export const BudgetTab: FC<BudgetTabProps> = ({ plan, dispatch }) => {
             })}
           </div>
 
-          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-stone-500 dark:text-stone-400">
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-stone-600 dark:text-stone-400">
             {CATEGORIES.map((cat) => (
               <div key={cat} className="flex items-center gap-1.5">
                 <span className={`w-2.5 h-2.5 rounded-sm ${CATEGORY_COLORS[cat]}`} />
@@ -178,7 +181,7 @@ export const BudgetTab: FC<BudgetTabProps> = ({ plan, dispatch }) => {
                       <p className="font-bold text-sm text-stone-900 dark:text-stone-100 mt-1">
                         {opt.title}
                       </p>
-                      <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 leading-relaxed">
+                      <p className="text-xs text-stone-600 dark:text-stone-400 mt-1 leading-relaxed">
                         {opt.description}
                       </p>
                     </div>
@@ -204,7 +207,7 @@ export const BudgetTab: FC<BudgetTabProps> = ({ plan, dispatch }) => {
           <h4 className="font-bold text-sm text-stone-900 dark:text-stone-100 uppercase tracking-wider">
             Category Allocations & Sliders
           </h4>
-          <span className="text-xs text-stone-500">
+          <span className="text-xs text-stone-600 dark:text-stone-400">
             {plan.locked.length} of {CATEGORIES.length} categories locked
           </span>
         </div>
@@ -245,7 +248,7 @@ export const BudgetTab: FC<BudgetTabProps> = ({ plan, dispatch }) => {
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-stone-500 dark:text-stone-400">{customLabel}</p>
+                      <p className="text-xs text-stone-600 dark:text-stone-400">{customLabel}</p>
                     </div>
                   </div>
 
@@ -254,7 +257,7 @@ export const BudgetTab: FC<BudgetTabProps> = ({ plan, dispatch }) => {
                       <p className="font-extrabold text-sm text-stone-900 dark:text-stone-100 font-sans">
                         {formatINR(amount)}
                       </p>
-                      <p className="text-[11px] text-stone-400">
+                      <p className="text-[11px] text-stone-600 dark:text-stone-400">
                         {percentage.toFixed(1)}% · {toLakh(amount)}
                       </p>
                     </div>
@@ -269,7 +272,7 @@ export const BudgetTab: FC<BudgetTabProps> = ({ plan, dispatch }) => {
                       className={`p-2 rounded-lg border transition ${
                         isLocked
                           ? 'border-brand-500 bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300'
-                          : 'border-stone-200 dark:border-stone-700 text-stone-400 hover:text-stone-600'
+                          : 'border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-400 hover:text-stone-600'
                       }`}
                       title={isLocked ? 'Unlock category' : 'Lock category amount'}
                     >

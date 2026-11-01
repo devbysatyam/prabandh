@@ -103,8 +103,8 @@ budget is 50000`;
       'POST',
     );
     expect(res.status).toBe(200);
-    expect(res.data.themes.length).toBeGreaterThan(0);
-    expect(res.data.foodStyle.length).toBeGreaterThan(0);
+    expect((res.data['themes'] as unknown[]).length).toBeGreaterThan(0);
+    expect((res.data['foodStyle'] as unknown[]).length).toBeGreaterThan(0);
     expect(res.data.invitationLine).toBeDefined();
   });
 

@@ -5,7 +5,15 @@ import { formatINR } from './money';
 import { buildSchedule, diffDays } from './timeline';
 
 /**
- * Generates an executive WhatsApp update message ready to copy & share to the family group.
+ * Generates an executive WhatsApp update (budget, RSVPs, urgent tasks, vendors) to share with the family group.
+ *
+ * @param plan - The current plan.
+ * @param today - Reference date (YYYY-MM-DD).
+ * @returns Formatted message text.
+ * @example
+ * ```ts
+ * generateFamilyWhatsappUpdate(plan, '2026-11-02').includes('Family Planning Update'); // => true
+ * ```
  */
 export function generateFamilyWhatsappUpdate(plan: Plan, today: string): string {
   const daysLeft = diffDays(today, plan.eventDate);

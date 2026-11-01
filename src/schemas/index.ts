@@ -286,8 +286,6 @@ export const PRIORITY_ITEMS = [
   },
 ] as const;
 
-export type PriorityId = (typeof PRIORITY_ITEMS)[number]['id'];
-
 /* Main Plan Schema */
 export const PlanSchema = z.object({
   id: z.string().min(1).max(50),
@@ -330,12 +328,6 @@ export const IntakeSchema = z.object({
 export type Intake = z.infer<typeof IntakeSchema>;
 
 /* AI Exchange Schemas */
-export const ChatMessageSchema = z.object({
-  role: z.enum(['user', 'assistant', 'system']),
-  content: z.string().max(2000),
-});
-export type ChatMessage = z.infer<typeof ChatMessageSchema>;
-
 export const IdeasResponseSchema = z.object({
   themes: z.array(z.object({ title: z.string(), description: z.string() })).max(6),
   activities: z.array(z.string()).max(8),

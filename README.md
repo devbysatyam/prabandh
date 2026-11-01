@@ -130,10 +130,18 @@ The ranking is completely deterministic, so it is instant and reliable even when
 
 ## 🏗️ Architecture
 
-- **State Layer**: Single deterministic state machine (`src/state/planStore.ts`) with undo/reset, localStorage persistence, and shareable encoded URLs.
+- **State Layer** (`src/state/`): a single deterministic reducer split into `planReducer.ts` + feature reducers (`reducers/core|tasks|guests|venues|vendors.ts`), plan factories (`planFactory.ts`, `samplePlan.ts`), `persistence.ts` (localStorage + share links) and the `usePlanStore` hook. `planStore.ts` is the public barrel.
 - **Engine Layer**: Pure, zero-dependency calculation functions in `src/engine/` (`money.ts`, `budget.ts`, `timeline.ts`, `guests.ts`, `venues.ts`, `vendors.ts`, `analytics.ts`).
-- **UI Layer**: React 18 with accessible semantic markup and dark mode token system.
-- **Serverless API**: Node HTTP handlers in `/api/` with Gemini 3.5 integration and deterministic local fallback parsers.
+- **UI Layer** (`src/components/`): React 18 with accessible semantic markup and a dark mode token system. Large tabs are folders (`vendors/`, `venues/`, `guests/`, `setup/`, `overview/`, `analytics/`) exposed through thin re-export files; non-default tabs are code-split with `React.lazy`, and an `ErrorBoundary` wraps the app and each tab. Shared primitives live in `ui/`, `hooks/` and `lib/`.
+- **Serverless API**: Vercel functions in `/api/` delegate to `src/api/handler.ts`, which validates input with Zod and dispatches to one module per route in `src/api/handlers/` (Gemini with deterministic local fallbacks).
+
+Design rationale is captured in the [Architecture Decision Records](docs/adr/README.md) and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md); release notes are in [CHANGELOG.md](CHANGELOG.md).
+
+### Quality gates
+
+`npm run typecheck`, `npm run lint` (typescript-eslint type-aware, react-hooks, jsx-a11y strict), `npm run format:check`, `npm test`, `npm run build` all run in CI.
+
+Extra local checks: `npm run knip` (unused code and dependencies), `npm run dup` (duplication), `npm run size` (gzip bundle budget, after `npm run build`), `npm run docs:api` (TypeDoc), `npm run e2e` (Playwright). Commits must follow Conventional Commits (enforced by commitlint via husky).
 
 ---
 

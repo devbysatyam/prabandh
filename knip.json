@@ -1,0 +1,15 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "api/*.ts",
+    "tests/**/*.{ts,tsx}",
+    "e2e/**/*.ts",
+    "scripts/*.{js,mjs}",
+    "vitest.setup.ts"
+  ],
+  "project": ["src/**/*.{ts,tsx}", "api/**/*.ts", "scripts/**/*.{js,mjs}", "src/**/*.css"],
+  "ignoreExportsUsedInFile": true,
+  "ignoreIssues": {
+    "src/state/planStore.ts": ["exports"]
+  }
+}

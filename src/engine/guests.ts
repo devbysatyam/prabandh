@@ -1,5 +1,14 @@
 import type { DietPreference, Guest, GuestSide, Plan } from '../schemas';
 
+/**
+ * Aggregated headcount, RSVP, side and dietary statistics for the guest list.
+ *
+ * @example
+ * ```ts
+ * const g = aggregateGuests(plan.guestList);
+ * g.confirmationRate; // => 0..100
+ * ```
+ */
 export interface GuestSummary {
   totalEntries: number;
   totalInvitedCount: number;
@@ -12,7 +21,14 @@ export interface GuestSummary {
 }
 
 /**
- * Aggregates guest headcount, RSVP statuses, family sides, and dietary needs.
+ * Aggregates guest headcount, RSVP statuses, family sides and dietary needs.
+ *
+ * @param guestList - Guest entries; each entry counts for `max(1, count)` people.
+ * @returns Totals by RSVP status, side and diet plus the confirmation percentage.
+ * @example
+ * ```ts
+ * aggregateGuests([{ id: 'g1', name: 'Sharma', count: 4, side: 'groom', rsvp: 'confirmed', diet: 'veg' }]).confirmedCount; // => 4
+ * ```
  */
 export function aggregateGuests(guestList: Guest[]): GuestSummary {
   let totalInvitedCount = 0;
@@ -63,8 +79,15 @@ export function aggregateGuests(guestList: Guest[]): GuestSummary {
 }
 
 /**
- * Synchronizes the plan's master guest headcount with the guest list.
- * If useConfirmedOnly is true, uses confirmed guests; otherwise uses (confirmed + pending).
+ * Synchronises the plan's master headcount with the guest list.
+ *
+ * @param plan - The current plan.
+ * @param useConfirmedOnly - Count only confirmed guests; otherwise confirmed + pending.
+ * @returns A plan with `guests` updated, or the same plan when the list is empty / has no active guests.
+ * @example
+ * ```ts
+ * syncGuestCountWithList(plan, true).guests; // => confirmed headcount
+ * ```
  */
 export function syncGuestCountWithList(plan: Plan, useConfirmedOnly = false): Plan {
   const summary = aggregateGuests(plan.guestList);
@@ -85,6 +108,14 @@ export function syncGuestCountWithList(plan: Plan, useConfirmedOnly = false): Pl
 
 /**
  * Generates ready-to-send WhatsApp invite / RSVP follow-up text for a guest.
+ *
+ * @param guest - The invitee.
+ * @param plan - The plan supplying title, date and city.
+ * @returns A Namaste-style message with the formatted event date.
+ * @example
+ * ```ts
+ * formatGuestWhatsappInvite(guest, plan).startsWith(`Namaste ${guest.name}!`); // => true
+ * ```
  */
 export function formatGuestWhatsappInvite(guest: Guest, plan: Plan): string {
   const name = guest.name;

@@ -18,8 +18,19 @@ function foldLine(line: string): string {
 }
 
 /**
- * Generates an RFC 5545 compliant .ics calendar file string containing all
- * event milestones, tasks, and day-of schedule.
+ * Generates an RFC 5545 compliant .ics calendar string containing all event milestones,
+ * tasks and the day-of schedule.
+ *
+ * @param eventTitle - Event title (used as the calendar name).
+ * @param eventDate - Event date (YYYY-MM-DD) for run-sheet entries.
+ * @param tasks - Scheduled milestones, one all-day VEVENT each.
+ * @param runSheet - Optional day-of run-sheet items.
+ * @returns The calendar text with CRLF line endings, folded at 75 characters.
+ * @example
+ * ```ts
+ * const ics = generateIcsCalendar('Wedding', '2027-02-14', schedule, plan.runSheet);
+ * ics.startsWith('BEGIN:VCALENDAR'); // => true
+ * ```
  */
 export function generateIcsCalendar(
   eventTitle: string,

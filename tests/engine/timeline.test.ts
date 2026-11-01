@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { requireDefined } from '../helpers';
 import {
   addDays,
   diffDays,
@@ -128,8 +129,8 @@ describe('timeline.ts', () => {
     const schedule = buildSchedule(tasks, eventDate, today);
     expect(schedule.length).toBe(2);
 
-    const venue = schedule.find((t) => t.id === '1')!;
-    const catering = schedule.find((t) => t.id === '2')!;
+    const venue = requireDefined(schedule.find((t) => t.id === '1'));
+    const catering = requireDefined(schedule.find((t) => t.id === '2'));
 
     expect(venue.affectedByDelay).toBe(true);
     expect(diffDays(catering.effectiveDate, eventDate)).toBeGreaterThan(0);
@@ -195,6 +196,8 @@ describe('timeline.ts', () => {
     const compressed = compressTasks(tasks, 60);
     const maxLead = Math.max(...compressed.map((t) => t.leadDays));
     expect(maxLead).toBeLessThanOrEqual(60);
-    expect(compressed[0]!.leadDays).toBeGreaterThan(compressed[1]!.leadDays);
+    expect(requireDefined(compressed[0]).leadDays).toBeGreaterThan(
+      requireDefined(compressed[1]).leadDays,
+    );
   });
 });

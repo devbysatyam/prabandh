@@ -2,6 +2,15 @@ import { CATEGORIES, type Allocation, type Category, type Occasion, type Plan } 
 import { largestRemainderRound } from './money';
 import { OCCASION_PRESETS } from './presets';
 
+/**
+ * Overall budget position derived from allocation, vendor contracts and guest count.
+ *
+ * @example
+ * ```ts
+ * const s = budgetStatus(plan);
+ * s.isOverBudget ? s.overBy : 0;
+ * ```
+ */
 export interface BudgetStatus {
   total: number;
   allocated: number;
@@ -13,6 +22,15 @@ export interface BudgetStatus {
   isOverBudget: boolean;
 }
 
+/**
+ * Outcome of {@link redistribute}: the new allocation and what changed.
+ *
+ * @example
+ * ```ts
+ * const r = redistribute(allocation, 'decor', 200000);
+ * r.capped; // => true when the requested amount was not feasible
+ * ```
+ */
 export interface RedistributionResult {
   allocation: Allocation;
   changes: { category: Category; delta: number }[];
@@ -20,6 +38,20 @@ export interface RedistributionResult {
   maxFeasible: number;
 }
 
+/**
+ * One concrete way to resolve an over-budget condition.
+ *
+ * @example
+ * ```ts
+ * const o: OverBudgetOption = {
+ *   id: 'use_contingency',
+ *   title: 'Use contingency buffer',
+ *   description: '...',
+ *   rupeeImpact: 50000,
+ *   canApply: true,
+ * };
+ * ```
+ */
 export interface OverBudgetOption {
   id: 'reduce_guests' | 'trim_categories' | 'use_contingency';
   title: string;
@@ -29,8 +61,18 @@ export interface OverBudgetOption {
 }
 
 /**
- * Computes category allocation from presets, applying priority multipliers (×1.25)
- * and strictly preserving the exact sum to totalBudget using largest remainder rounding.
+ * Computes category allocation from occasion presets, applying priority multipliers (x1.25)
+ * and preserving the exact sum to the total via largest-remainder rounding.
+ *
+ * @param totalBudget - Total budget in whole rupees.
+ * @param occasion - Occasion whose preset percentages are used.
+ * @param priorities - Categories weighted x1.25 (contingency is never boosted).
+ * @returns Integer rupee allocation per category that sums exactly to `totalBudget`.
+ * @example
+ * ```ts
+ * const a = allocate(1_000_000, 'wedding', ['catering']);
+ * Object.values(a).reduce((x, y) => x + y, 0); // => 1000000
+ * ```
  */
 export function allocate(
   totalBudget: number,
@@ -72,12 +114,23 @@ export function allocate(
   }
 
   const rounded = largestRemainderRound(normalized, totalBudget);
-  return rounded as Allocation;
+  return rounded;
 }
 
 /**
- * Live redistribution: When one category amount changes, the delta is absorbed
- * proportionally by other UNLOCKED categories without letting any category go below zero.
+ * Live redistribution: when one category changes, the delta is absorbed proportionally by the
+ * other UNLOCKED categories without letting any category drop below zero.
+ *
+ * @param allocation - Current allocation.
+ * @param category - Category being edited.
+ * @param newAmount - Requested amount for that category (rupees).
+ * @param locked - Categories that must not change.
+ * @returns New allocation (total preserved), per-category changes, and whether the request was capped.
+ * @example
+ * ```ts
+ * const r = redistribute(allocation, 'decor', allocation.decor + 10_000, ['venue']);
+ * r.changes[0]; // => { category: 'decor', delta: 10000 }
+ * ```
  */
 export function redistribute(
   allocation: Allocation,
@@ -125,26 +178,8 @@ export function redistribute(
 
   // We are within feasible range. Distribute -delta proportionally across other unlocked
   const newAlloc: Allocation = { ...allocation, [category]: Math.round(newAmount) };
-  const targetOtherSum = otherPool - delta;
-
-  const proportions: Record<string, number> = {};
-  for (const c of otherUnlocked) {
-    proportions[c] = allocation[c];
-  }
-
-  const distributed = largestRemainderRound(proportions, targetOtherSum);
-
-  const changes: { category: Category; delta: number }[] = [];
-  changes.push({ category, delta });
-
-  for (const c of otherUnlocked) {
-    const oldVal = allocation[c];
-    const newVal = distributed[c] ?? 0;
-    newAlloc[c] = newVal;
-    if (newVal !== oldVal) {
-      changes.push({ category: c, delta: newVal - oldVal });
-    }
-  }
+  const changes = absorbDelta(allocation, newAlloc, otherUnlocked, otherPool - delta);
+  changes.unshift({ category, delta });
 
   // Verify exact sum
   const finalSum = CATEGORIES.reduce((s, c) => s + newAlloc[c], 0);
@@ -165,8 +200,40 @@ export function redistribute(
   };
 }
 
+/** Spread `targetOtherSum` over `categories` in proportion to their old amounts, mutating `newAlloc`. */
+function absorbDelta(
+  allocation: Allocation,
+  newAlloc: Allocation,
+  categories: Category[],
+  targetOtherSum: number,
+): { category: Category; delta: number }[] {
+  const proportions: Record<string, number> = {};
+  for (const c of categories) {
+    proportions[c] = allocation[c];
+  }
+  const distributed = largestRemainderRound(proportions, targetOtherSum);
+  const changes: { category: Category; delta: number }[] = [];
+  for (const c of categories) {
+    const oldVal = allocation[c];
+    const newVal = distributed[c] ?? 0;
+    newAlloc[c] = newVal;
+    if (newVal !== oldVal) {
+      changes.push({ category: c, delta: newVal - oldVal });
+    }
+  }
+  return changes;
+}
+
 /**
- * Calculates live catering requirement based on perPlate * guests.
+ * Calculates the catering requirement for a guest count (`perPlate x guests`) against the allocation.
+ *
+ * @param plan - The current plan.
+ * @param newGuests - Hypothetical guest count (clamped to at least 1).
+ * @returns Required vs current catering, the difference and whether it exceeds the allocation.
+ * @example
+ * ```ts
+ * scaleGuests(plan, 250).difference; // => rupees of extra catering needed (negative if spare)
+ * ```
  */
 export function scaleGuests(
   plan: Plan,
@@ -190,27 +257,38 @@ export function scaleGuests(
   };
 }
 
-/**
- * Returns overall budget status, tracking committed vendor contracts vs unquoted estimates.
- */
-export function budgetStatus(plan: Plan): BudgetStatus {
-  const total = plan.totalBudget;
-  const allocated = CATEGORIES.reduce((sum, c) => sum + plan.allocation[c], 0);
-
-  // Calculate committed spend from booked vendors or accepted quotes
+/** Sum committed spend from booked vendors' quotes or scheduled payments, and the categories it covers. */
+function committedSpend(plan: Plan): { committed: number; categoriesWithQuotes: Set<Category> } {
   let committed = 0;
   const categoriesWithQuotes = new Set<Category>();
-
   for (const v of plan.vendors) {
     if (v.status === 'booked' && v.quote && v.quote.totalPrice) {
       committed += v.quote.totalPrice;
       categoriesWithQuotes.add(v.category);
     } else if (v.payments && v.payments.length > 0) {
-      const vendorPaid = v.payments.reduce((s, p) => s + p.amount, 0);
-      committed += vendorPaid;
+      committed += v.payments.reduce((s, p) => s + p.amount, 0);
       categoriesWithQuotes.add(v.category);
     }
   }
+  return { committed, categoriesWithQuotes };
+}
+
+/**
+ * Returns the overall budget status, tracking committed vendor contracts versus unquoted estimates.
+ *
+ * @param plan - The current plan.
+ * @returns Totals, committed and estimated spend, overspend (if any) and remaining contingency.
+ * @example
+ * ```ts
+ * const s = budgetStatus(plan);
+ * s.total - s.committed; // remaining buffer and estimates
+ * ```
+ */
+export function budgetStatus(plan: Plan): BudgetStatus {
+  const total = plan.totalBudget;
+  const allocated = CATEGORIES.reduce((sum, c) => sum + plan.allocation[c], 0);
+
+  const { committed, categoriesWithQuotes } = committedSpend(plan);
 
   let estimated = 0;
   for (const c of CATEGORIES) {
@@ -236,8 +314,26 @@ export function budgetStatus(plan: Plan): BudgetStatus {
   };
 }
 
+/** Categories that can be trimmed to fund catering: not catering/contingency, locked or prioritised. */
+function flexibleCategories(plan: Plan): Category[] {
+  return CATEGORIES.filter(
+    (c) =>
+      c !== 'catering' &&
+      c !== 'contingency' &&
+      !plan.locked.includes(c) &&
+      !plan.priorities.includes(c),
+  );
+}
+
 /**
- * Generates up to 3 concrete, deterministic options to resolve an over-budget condition.
+ * Generates up to three concrete, deterministic options to resolve an over-budget condition.
+ *
+ * @param plan - The current plan.
+ * @returns Applicable options (reduce guests, trim flexible categories, use contingency); empty when within budget.
+ * @example
+ * ```ts
+ * generateOverBudgetOptions(plan).map((o) => o.id); // => ['reduce_guests', 'use_contingency']
+ * ```
  */
 export function generateOverBudgetOptions(plan: Plan): OverBudgetOption[] {
   const status = budgetStatus(plan);
@@ -262,13 +358,7 @@ export function generateOverBudgetOptions(plan: Plan): OverBudgetOption[] {
   }
 
   // Option 2: Trim unlocked flexible categories
-  const unlockedNonPriorities = CATEGORIES.filter(
-    (c) =>
-      c !== 'catering' &&
-      c !== 'contingency' &&
-      !plan.locked.includes(c) &&
-      !plan.priorities.includes(c),
-  );
+  const unlockedNonPriorities = flexibleCategories(plan);
   const flexiblePool = unlockedNonPriorities.reduce((s, c) => s + plan.allocation[c], 0);
 
   if (flexiblePool >= overBy && flexiblePool > 0) {
@@ -298,6 +388,15 @@ export function generateOverBudgetOptions(plan: Plan): OverBudgetOption[] {
 
 /**
  * Applies an over-budget resolution option to the plan deterministically.
+ *
+ * @param plan - The current plan.
+ * @param optionId - Which resolution to apply.
+ * @returns A new plan; the original is returned unchanged when within budget or the option is not feasible.
+ * @example
+ * ```ts
+ * const fixed = applyOption(plan, 'use_contingency');
+ * budgetStatus(fixed).isOverBudget; // => false
+ * ```
  */
 export function applyOption(
   plan: Plan,
@@ -327,13 +426,7 @@ export function applyOption(
   }
 
   if (optionId === 'trim_categories') {
-    const unlockedNonPriorities = CATEGORIES.filter(
-      (c) =>
-        c !== 'catering' &&
-        c !== 'contingency' &&
-        !plan.locked.includes(c) &&
-        !plan.priorities.includes(c),
-    );
+    const unlockedNonPriorities = flexibleCategories(plan);
     const pool = unlockedNonPriorities.reduce((s, c) => s + plan.allocation[c], 0);
     if (pool < overBy) return plan;
 

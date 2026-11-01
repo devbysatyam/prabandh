@@ -134,7 +134,8 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
               Venue & Property Management (स्थल प्रबंधन)
             </h3>
             <p className="text-xs text-stone-500 dark:text-stone-400">
-              Shortlist and compare banquets, lawns, and heritage resorts. Evaluate capacity fits, kitchen catering policies, and log in-person physical site visits.
+              Shortlist and compare banquets, lawns, and heritage resorts. Evaluate capacity fits,
+              kitchen catering policies, and log in-person physical site visits.
             </p>
           </div>
 
@@ -164,30 +165,42 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
         {/* 4 Metrics Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 py-3 border-y border-stone-100 dark:border-stone-800">
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Shortlisted</span>
-            <p className="text-2xl font-extrabold text-stone-900 dark:text-stone-100">{venues.length}</p>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Shortlisted
+            </span>
+            <p className="text-2xl font-extrabold text-stone-900 dark:text-stone-100">
+              {venues.length}
+            </p>
             <p className="text-[11px] text-stone-500">Properties under review</p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Site Visits Done</span>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Site Visits Done
+            </span>
             <p className="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400">
               {siteVisits.length}
             </p>
             <p className="text-[11px] text-stone-500">Physical walkthroughs</p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Venue Budget</span>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Venue Budget
+            </span>
             <p className="text-2xl font-extrabold text-amber-600 dark:text-amber-400">
               {formatINR(plan.allocation.venue)}
             </p>
             <p className="text-[11px] text-stone-500">Allocated in Master Budget</p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Booked Venue</span>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Booked Venue
+            </span>
             <p className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400 truncate mt-1">
               {bookedVenue ? bookedVenue.name : 'None Locked Yet'}
             </p>
-            <p className="text-[11px] text-stone-500">{bookedVenue ? 'Date & Token Locked' : 'Action Required'}</p>
+            <p className="text-[11px] text-stone-500">
+              {bookedVenue ? 'Date & Token Locked' : 'Action Required'}
+            </p>
           </div>
         </div>
 
@@ -220,7 +233,10 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
 
       {/* Add Venue Form Modal */}
       {showAddForm && (
-        <form onSubmit={handleCreateVenue} className="card border-amber-300 dark:border-amber-900 bg-amber-50/20 dark:bg-amber-950/20 space-y-4">
+        <form
+          onSubmit={handleCreateVenue}
+          className="card border-amber-300 dark:border-amber-900 bg-amber-50/20 dark:bg-amber-950/20 space-y-4"
+        >
           <div className="flex items-center justify-between">
             <h4 className="font-bold text-sm text-stone-900 dark:text-stone-100 flex items-center gap-2">
               <Icon name="plus" className="w-4 h-4 text-amber-500" />
@@ -237,10 +253,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="venue-name-input"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Venue / Property Name
               </label>
               <input
+                id="venue-name-input"
+                aria-label="Venue or Property Name"
                 type="text"
                 required
                 value={name}
@@ -250,10 +271,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="venue-type-select"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Property Type
               </label>
               <select
+                id="venue-type-select"
+                aria-label="Property Type"
                 value={type}
                 onChange={(e) => setType(e.target.value as VenueType)}
                 className="input-base text-xs"
@@ -269,10 +295,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="venue-min-capacity"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Min Capacity
               </label>
               <input
+                id="venue-min-capacity"
+                aria-label="Minimum Guest Capacity"
                 type="number"
                 min={0}
                 required
@@ -282,10 +313,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="venue-max-capacity"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Max Capacity
               </label>
               <input
+                id="venue-max-capacity"
+                aria-label="Maximum Guest Capacity"
                 type="number"
                 min={0}
                 required
@@ -295,10 +331,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="venue-rental-cost"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Rental Cost (₹)
               </label>
               <input
+                id="venue-rental-cost"
+                aria-label="Venue Rental Cost in Indian Rupees"
                 type="number"
                 min={0}
                 required
@@ -308,10 +349,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="venue-caution-deposit"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Caution Deposit (₹)
               </label>
               <input
+                id="venue-caution-deposit"
+                aria-label="Refundable Caution Deposit in Indian Rupees"
                 type="number"
                 min={0}
                 required
@@ -324,10 +370,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="venue-catering-policy"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Catering Policy
               </label>
               <select
+                id="venue-catering-policy"
+                aria-label="Catering Policy"
                 value={cateringPolicy}
                 onChange={(e) => setCateringPolicy(e.target.value as CateringPolicy)}
                 className="input-base text-xs"
@@ -338,10 +389,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="venue-curfew-time"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Sound Curfew Time
               </label>
               <input
+                id="venue-curfew-time"
+                aria-label="Sound Curfew Time"
                 type="text"
                 value={curfewTime}
                 onChange={(e) => setCurfewTime(e.target.value)}
@@ -350,10 +406,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="venue-rooms-included"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Bridal Rooms Included
               </label>
               <input
+                id="venue-rooms-included"
+                aria-label="Bridal Rooms Included"
                 type="number"
                 min={0}
                 value={roomsIncluded}
@@ -362,10 +423,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="venue-parking-capacity"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Parking Capacity (Cars)
               </label>
               <input
+                id="venue-parking-capacity"
+                aria-label="Parking Capacity in Cars"
                 type="number"
                 min={0}
                 value={parkingCapacity}
@@ -377,10 +443,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="venue-address-input"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Address / Location
               </label>
               <input
+                id="venue-address-input"
+                aria-label="Venue Address and Location"
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
@@ -389,10 +460,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="venue-notes-input"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Notes / First Impressions
               </label>
               <input
+                id="venue-notes-input"
+                aria-label="Venue Notes and First Impressions"
                 type="text"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
@@ -403,8 +479,13 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="flex items-center gap-2 text-xs font-semibold text-stone-700 dark:text-stone-300 cursor-pointer">
+            <label
+              htmlFor="venue-alcohol-allowed"
+              className="flex items-center gap-2 text-xs font-semibold text-stone-700 dark:text-stone-300 cursor-pointer"
+            >
               <input
+                id="venue-alcohol-allowed"
+                aria-label="Alcohol and Bar Setup Permitted with excise license"
                 type="checkbox"
                 checked={alcoholAllowed}
                 onChange={(e) => setAlcoholAllowed(e.target.checked)}
@@ -431,7 +512,10 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
 
       {/* Record Site Visit Form Modal */}
       {showVisitForm && (
-        <form onSubmit={handleCreateSiteVisit} className="card border-emerald-300 dark:border-emerald-900 bg-emerald-50/20 dark:bg-emerald-950/20 space-y-4">
+        <form
+          onSubmit={handleCreateSiteVisit}
+          className="card border-emerald-300 dark:border-emerald-900 bg-emerald-50/20 dark:bg-emerald-950/20 space-y-4"
+        >
           <div className="flex items-center justify-between">
             <h4 className="font-bold text-sm text-stone-900 dark:text-stone-100 flex items-center gap-2">
               <Icon name="check" className="w-4 h-4 text-emerald-500" />
@@ -448,10 +532,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="visit-venue-select"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Property Visited
               </label>
               <select
+                id="visit-venue-select"
+                aria-label="Property Visited"
                 value={selectedVenueId}
                 onChange={(e) => setSelectedVenueId(e.target.value)}
                 className="input-base text-xs"
@@ -464,10 +553,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="visit-date-input"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Date of Visit
               </label>
               <input
+                id="visit-date-input"
+                aria-label="Date of Site Visit"
                 type="date"
                 required
                 value={visitDate}
@@ -476,10 +570,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="visit-attendees-input"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Visitors / Family Members Present
               </label>
               <input
+                id="visit-attendees-input"
+                aria-label="Visitors and Family Members Present"
                 type="text"
                 required
                 value={attendees}
@@ -496,8 +595,13 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
               Physical Walkthrough Inspection Checklist
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-              <label className="flex items-center gap-2 p-2.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-xs font-medium cursor-pointer">
+              <label
+                htmlFor="visit-ac-working"
+                className="flex items-center gap-2 p-2.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-xs font-medium cursor-pointer"
+              >
                 <input
+                  id="visit-ac-working"
+                  aria-label="Air Conditioning Tested and Effective"
                   type="checkbox"
                   checked={acWorking}
                   onChange={(e) => setAcWorking(e.target.checked)}
@@ -505,8 +609,13 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
                 />
                 Air Conditioning Tested & Effective
               </label>
-              <label className="flex items-center gap-2 p-2.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-xs font-medium cursor-pointer">
+              <label
+                htmlFor="visit-bridal-room"
+                className="flex items-center gap-2 p-2.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-xs font-medium cursor-pointer"
+              >
                 <input
+                  id="visit-bridal-room"
+                  aria-label="Bridal Rooms and Washrooms Clean"
                   type="checkbox"
                   checked={bridalRoomClean}
                   onChange={(e) => setBridalRoomClean(e.target.checked)}
@@ -514,8 +623,13 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
                 />
                 Bridal Rooms & Washrooms Clean
               </label>
-              <label className="flex items-center gap-2 p-2.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-xs font-medium cursor-pointer">
+              <label
+                htmlFor="visit-sound-curfew"
+                className="flex items-center gap-2 p-2.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-xs font-medium cursor-pointer"
+              >
                 <input
+                  id="visit-sound-curfew"
+                  aria-label="Music Curfew 23:00 Clarified"
                   type="checkbox"
                   checked={soundCurfewOk}
                   onChange={(e) => setSoundCurfewOk(e.target.checked)}
@@ -523,8 +637,13 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
                 />
                 Music Curfew (23:00) Clarified
               </label>
-              <label className="flex items-center gap-2 p-2.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-xs font-medium cursor-pointer">
+              <label
+                htmlFor="visit-parking-adequate"
+                className="flex items-center gap-2 p-2.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-xs font-medium cursor-pointer"
+              >
                 <input
+                  id="visit-parking-adequate"
+                  aria-label="Parking and Valet Access Confirmed"
                   type="checkbox"
                   checked={parkingAdequate}
                   onChange={(e) => setParkingAdequate(e.target.checked)}
@@ -532,8 +651,13 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
                 />
                 Parking & Valet Access Confirmed
               </label>
-              <label className="flex items-center gap-2 p-2.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-xs font-medium cursor-pointer">
+              <label
+                htmlFor="visit-tasting-done"
+                className="flex items-center gap-2 p-2.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-xs font-medium cursor-pointer"
+              >
                 <input
+                  id="visit-tasting-done"
+                  aria-label="Food Tasting and Kitchen Inspected"
                   type="checkbox"
                   checked={tastingDone}
                   onChange={(e) => setTastingDone(e.target.checked)}
@@ -542,8 +666,12 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
                 Food Tasting / Kitchen Inspected
               </label>
               <div className="flex items-center justify-between p-2.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-xs font-medium">
-                <span>Overall Rating:</span>
+                <label htmlFor="visit-rating-select" className="cursor-pointer">
+                  Overall Rating:
+                </label>
                 <select
+                  id="visit-rating-select"
+                  aria-label="Overall Site Visit Rating"
                   value={visitRating}
                   onChange={(e) => setVisitRating(parseInt(e.target.value, 10))}
                   className="font-bold text-amber-500 border-none bg-transparent"
@@ -560,10 +688,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="visit-tasting-notes"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Food Tasting Notes (if applicable)
               </label>
               <textarea
+                id="visit-tasting-notes"
+                aria-label="Food Tasting Notes"
                 rows={2}
                 value={tastingNotes}
                 onChange={(e) => setTastingNotes(e.target.value)}
@@ -572,10 +705,15 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="visit-meeting-notes"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Manager Meeting & Discussion Notes
               </label>
               <textarea
+                id="visit-meeting-notes"
+                aria-label="Manager Meeting and Discussion Notes"
                 rows={2}
                 value={visitNotes}
                 onChange={(e) => setVisitNotes(e.target.value)}
@@ -612,7 +750,8 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
                 No Venues Shortlisted Yet
               </h5>
               <p className="text-xs text-stone-500 max-w-sm mx-auto">
-                Add banquets, lawns, or hotel ballrooms to evaluate their capacity and curfew against your celebration needs.
+                Add banquets, lawns, or hotel ballrooms to evaluate their capacity and curfew
+                against your celebration needs.
               </p>
               <button
                 type="button"
@@ -626,7 +765,8 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
             venues.map((venue) => {
               const evalRes = evaluateVenue(venue, plan.guests);
               const isBooked = venue.status === 'booked';
-              const isVisited = venue.status === 'visited' || siteVisits.some((v) => v.venueId === venue.id);
+              const isVisited =
+                venue.status === 'visited' || siteVisits.some((v) => v.venueId === venue.id);
 
               return (
                 <div
@@ -635,8 +775,8 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
                     isBooked
                       ? 'border-emerald-500/80 bg-emerald-50/10 dark:bg-emerald-950/20 shadow-md ring-1 ring-emerald-500/20'
                       : isVisited
-                      ? 'border-indigo-200 dark:border-indigo-900/60 bg-white dark:bg-stone-900'
-                      : 'border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900'
+                        ? 'border-indigo-200 dark:border-indigo-900/60 bg-white dark:bg-stone-900'
+                        : 'border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900'
                   }`}
                 >
                   {/* Top Bar */}
@@ -669,7 +809,9 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
 
                     <div className="text-right flex items-center gap-3">
                       <div>
-                        <span className="text-[10px] text-stone-400 font-semibold block uppercase">Rental + Deposit</span>
+                        <span className="text-[10px] text-stone-400 font-semibold block uppercase">
+                          Rental + Deposit
+                        </span>
                         <p className="font-bold text-base text-stone-900 dark:text-stone-100">
                           {formatINR(venue.rentalCost)}
                         </p>
@@ -692,7 +834,9 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
                         </button>
                         <button
                           type="button"
-                          onClick={() => handleSetStatus(venue, isBooked ? 'shortlisted' : 'booked')}
+                          onClick={() =>
+                            handleSetStatus(venue, isBooked ? 'shortlisted' : 'booked')
+                          }
                           className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
                             isBooked
                               ? 'bg-emerald-600 text-white shadow-sm'
@@ -719,36 +863,47 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
                       evalRes.capacityStatus === 'optimal'
                         ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900'
                         : evalRes.capacityStatus === 'cramped'
-                        ? 'bg-red-50 dark:bg-red-950/60 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-900'
-                        : 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900'
+                          ? 'bg-red-50 dark:bg-red-950/60 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-900'
+                          : 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900'
                     }`}
                   >
-                    <Icon name={evalRes.capacityStatus === 'optimal' ? 'check' : 'alert'} className="w-4 h-4 shrink-0" />
+                    <Icon
+                      name={evalRes.capacityStatus === 'optimal' ? 'check' : 'alert'}
+                      className="w-4 h-4 shrink-0"
+                    />
                     <span>{evalRes.capacityMessage}</span>
                   </div>
 
                   {/* Policy Pills & Details */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                     <div className="p-2.5 rounded-lg bg-stone-50 dark:bg-stone-800/40 border border-stone-200/60 dark:border-stone-800">
-                      <span className="text-[10px] text-stone-400 block font-semibold">Catering Policy</span>
+                      <span className="text-[10px] text-stone-400 block font-semibold">
+                        Catering Policy
+                      </span>
                       <span className="font-semibold text-stone-800 dark:text-stone-200 capitalize">
                         {venue.cateringPolicy.replace('_', ' ')}
                       </span>
                     </div>
                     <div className="p-2.5 rounded-lg bg-stone-50 dark:bg-stone-800/40 border border-stone-200/60 dark:border-stone-800">
-                      <span className="text-[10px] text-stone-400 block font-semibold">Music Curfew</span>
+                      <span className="text-[10px] text-stone-400 block font-semibold">
+                        Music Curfew
+                      </span>
                       <span className="font-semibold text-stone-800 dark:text-stone-200">
                         {venue.curfewTime}
                       </span>
                     </div>
                     <div className="p-2.5 rounded-lg bg-stone-50 dark:bg-stone-800/40 border border-stone-200/60 dark:border-stone-800">
-                      <span className="text-[10px] text-stone-400 block font-semibold">AC Green Rooms</span>
+                      <span className="text-[10px] text-stone-400 block font-semibold">
+                        AC Green Rooms
+                      </span>
                       <span className="font-semibold text-stone-800 dark:text-stone-200">
                         {venue.roomsIncluded} Rooms Included
                       </span>
                     </div>
                     <div className="p-2.5 rounded-lg bg-stone-50 dark:bg-stone-800/40 border border-stone-200/60 dark:border-stone-800">
-                      <span className="text-[10px] text-stone-400 block font-semibold">Valet / Parking</span>
+                      <span className="text-[10px] text-stone-400 block font-semibold">
+                        Valet / Parking
+                      </span>
                       <span className="font-semibold text-stone-800 dark:text-stone-200">
                         ~{venue.parkingCapacity} Cars
                       </span>
@@ -766,7 +921,9 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={() => handleSetStatus(venue, isVisited ? 'shortlisted' : 'visited')}
+                        onClick={() =>
+                          handleSetStatus(venue, isVisited ? 'shortlisted' : 'visited')
+                        }
                         className={`btn-quiet text-xs ${isVisited ? 'text-indigo-600 font-bold' : ''}`}
                       >
                         {isVisited ? '✓ Walkthrough Completed' : 'Mark Visited'}
@@ -779,7 +936,9 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
                       className="btn-secondary text-xs"
                     >
                       <Icon name="whatsapp" className="w-3.5 h-3.5 text-emerald-500" />
-                      {copiedId === venue.id ? 'WhatsApp Enquiry Copied!' : 'Copy WhatsApp Enquiry for Venue'}
+                      {copiedId === venue.id
+                        ? 'WhatsApp Enquiry Copied!'
+                        : 'Copy WhatsApp Enquiry for Venue'}
                     </button>
                   </div>
                 </div>
@@ -799,7 +958,8 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
                   Venue Site Recce & Physical Walkthrough Logs (स्थल निरीक्षण)
                 </h4>
                 <p className="text-xs text-stone-500">
-                  Track in-person property visits with family members. Check air conditioning, stage height, acoustic sound curfew compliance, and food tastings.
+                  Track in-person property visits with family members. Check air conditioning, stage
+                  height, acoustic sound curfew compliance, and food tastings.
                 </p>
               </div>
               <button
@@ -824,7 +984,8 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
                 No Site Visits Logged Yet
               </h5>
               <p className="text-xs text-stone-500 max-w-md mx-auto">
-                Schedule or record family visits to your shortlisted venues to compare air conditioning cooling, stage space, washroom hygiene, and live food tasting sessions.
+                Schedule or record family visits to your shortlisted venues to compare air
+                conditioning cooling, stage space, washroom hygiene, and live food tasting sessions.
               </p>
               <button
                 type="button"
@@ -850,7 +1011,8 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
                         {visit.venueName}
                       </h4>
                       <span className="text-xs font-bold text-amber-500">
-                        {'★'.repeat(visit.rating)}{'☆'.repeat(5 - visit.rating)}
+                        {'★'.repeat(visit.rating)}
+                        {'☆'.repeat(5 - visit.rating)}
                       </span>
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
                         {visit.status.replace('_', ' ').toUpperCase()}
@@ -873,19 +1035,29 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
 
                 {/* Inspection Checklist Badges */}
                 <div className="flex flex-wrap gap-2 text-[11px]">
-                  <span className={`px-2.5 py-1 rounded-lg border font-semibold ${visit.acWorking ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800' : 'bg-stone-100 text-stone-500 border-stone-200'}`}>
+                  <span
+                    className={`px-2.5 py-1 rounded-lg border font-semibold ${visit.acWorking ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800' : 'bg-stone-100 text-stone-500 border-stone-200'}`}
+                  >
                     {visit.acWorking ? '✓ AC Tested & Cool' : '✕ AC Issue'}
                   </span>
-                  <span className={`px-2.5 py-1 rounded-lg border font-semibold ${visit.bridalRoomClean ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800' : 'bg-stone-100 text-stone-500 border-stone-200'}`}>
+                  <span
+                    className={`px-2.5 py-1 rounded-lg border font-semibold ${visit.bridalRoomClean ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800' : 'bg-stone-100 text-stone-500 border-stone-200'}`}
+                  >
                     {visit.bridalRoomClean ? '✓ Bridal Rooms Clean' : '✕ Rooms Need Work'}
                   </span>
-                  <span className={`px-2.5 py-1 rounded-lg border font-semibold ${visit.soundCurfewOk ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800' : 'bg-stone-100 text-stone-500 border-stone-200'}`}>
+                  <span
+                    className={`px-2.5 py-1 rounded-lg border font-semibold ${visit.soundCurfewOk ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800' : 'bg-stone-100 text-stone-500 border-stone-200'}`}
+                  >
                     {visit.soundCurfewOk ? '✓ 23:00 Curfew Clear' : '✕ Strict Curfew Risk'}
                   </span>
-                  <span className={`px-2.5 py-1 rounded-lg border font-semibold ${visit.parkingAdequate ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800' : 'bg-stone-100 text-stone-500 border-stone-200'}`}>
+                  <span
+                    className={`px-2.5 py-1 rounded-lg border font-semibold ${visit.parkingAdequate ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800' : 'bg-stone-100 text-stone-500 border-stone-200'}`}
+                  >
                     {visit.parkingAdequate ? '✓ Parking & Valet OK' : '✕ Limited Parking'}
                   </span>
-                  <span className={`px-2.5 py-1 rounded-lg border font-semibold ${visit.tastingDone ? 'bg-brand-50 text-brand-800 border-brand-200 dark:bg-brand-950/60 dark:text-brand-300 dark:border-brand-800' : 'bg-stone-100 text-stone-500 border-stone-200'}`}>
+                  <span
+                    className={`px-2.5 py-1 rounded-lg border font-semibold ${visit.tastingDone ? 'bg-brand-50 text-brand-800 border-brand-200 dark:bg-brand-950/60 dark:text-brand-300 dark:border-brand-800' : 'bg-stone-100 text-stone-500 border-stone-200'}`}
+                  >
                     {visit.tastingDone ? '✓ Food Tasting Done' : '○ Tasting Pending'}
                   </span>
                 </div>
@@ -895,7 +1067,10 @@ export const VenuesTab: FC<VenuesTabProps> = ({ plan, dispatch }) => {
                   <div className="space-y-1.5 pt-2 border-t border-stone-100 dark:border-stone-800 text-xs">
                     {visit.tastingNotes && (
                       <p className="text-stone-700 dark:text-stone-300">
-                        <strong className="text-brand-600 dark:text-brand-400">🍲 Food Tasting:</strong> {visit.tastingNotes}
+                        <strong className="text-brand-600 dark:text-brand-400">
+                          🍲 Food Tasting:
+                        </strong>{' '}
+                        {visit.tastingNotes}
                       </p>
                     )}
                     {visit.notes && (

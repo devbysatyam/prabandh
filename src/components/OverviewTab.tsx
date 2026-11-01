@@ -51,12 +51,20 @@ export const OverviewTab: FC<OverviewTabProps> = ({ plan, today, onNavigate }) =
       const res = await api.askCopilot(text, plan, today);
       setTurns((prev) => [
         ...prev,
-        { role: 'assistant', text: res.answer, source: res.source === 'gemini' ? 'Gemini AI' : 'Offline Engine' },
+        {
+          role: 'assistant',
+          text: res.answer,
+          source: res.source === 'gemini' ? 'Gemini AI' : 'Offline Engine',
+        },
       ]);
     } catch {
       setTurns((prev) => [
         ...prev,
-        { role: 'assistant', text: 'Sorry, I had trouble answering that right now. Please try again.', source: 'offline' },
+        {
+          role: 'assistant',
+          text: 'Sorry, I had trouble answering that right now. Please try again.',
+          source: 'offline',
+        },
       ]);
     } finally {
       setIsAsking(false);
@@ -101,7 +109,9 @@ export const OverviewTab: FC<OverviewTabProps> = ({ plan, today, onNavigate }) =
         {/* Committed spend */}
         <div className="card">
           <div className="flex items-center justify-between text-stone-500 dark:text-stone-400 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider">Committed Contracts</span>
+            <span className="text-xs font-semibold uppercase tracking-wider">
+              Committed Contracts
+            </span>
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
           </div>
           <p className="text-2xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">
@@ -143,9 +153,7 @@ export const OverviewTab: FC<OverviewTabProps> = ({ plan, today, onNavigate }) =
           <p className="text-2xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">
             {daysLeft > 0 ? `${daysLeft} Days` : 'Today!'}
           </p>
-          <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-            Date: {plan.eventDate}
-          </p>
+          <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">Date: {plan.eventDate}</p>
         </div>
       </div>
 
@@ -157,7 +165,8 @@ export const OverviewTab: FC<OverviewTabProps> = ({ plan, today, onNavigate }) =
               <span>⚡</span> Direct Section Explorer (सीधा अनुभाग दौरा)
             </h3>
             <p className="text-xs text-stone-500 dark:text-stone-400">
-              Jump directly into any section to inspect, compare quotes, review logged visits, or edit celebration details.
+              Jump directly into any section to inspect, compare quotes, review logged visits, or
+              edit celebration details.
             </p>
           </div>
         </div>
@@ -173,7 +182,8 @@ export const OverviewTab: FC<OverviewTabProps> = ({ plan, today, onNavigate }) =
               <span className="text-stone-400 group-hover:text-brand-600 transition">→</span>
             </div>
             <p className="text-[11px] text-stone-500 dark:text-stone-400">
-              {(plan.venues ?? []).length} properties · {(plan.siteVisits ?? []).length} site recce logged
+              {(plan.venues ?? []).length} properties · {(plan.siteVisits ?? []).length} site recce
+              logged
             </p>
           </button>
 
@@ -187,7 +197,8 @@ export const OverviewTab: FC<OverviewTabProps> = ({ plan, today, onNavigate }) =
               <span className="text-stone-400 group-hover:text-brand-600 transition">→</span>
             </div>
             <p className="text-[11px] text-stone-500 dark:text-stone-400">
-              {plan.vendors.length} vendors · {(plan.vendorMeetings ?? []).length} tastings & trials logged
+              {plan.vendors.length} vendors · {(plan.vendorMeetings ?? []).length} tastings & trials
+              logged
             </p>
           </button>
 
@@ -367,7 +378,9 @@ export const OverviewTab: FC<OverviewTabProps> = ({ plan, today, onNavigate }) =
           <div className="text-center py-8 text-stone-500">
             <Icon name="check" className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
             <p className="font-semibold text-sm">All Systems Running Smoothly!</p>
-            <p className="text-xs text-stone-400 mt-1">No budget deficits or overdue timeline tasks detected.</p>
+            <p className="text-xs text-stone-400 mt-1">
+              No budget deficits or overdue timeline tasks detected.
+            </p>
           </div>
         ) : (
           <div className="divide-y divide-stone-100 dark:divide-stone-800/60">
@@ -393,8 +406,8 @@ export const OverviewTab: FC<OverviewTabProps> = ({ plan, today, onNavigate }) =
                           insight.severity === 'critical'
                             ? 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300'
                             : insight.severity === 'warning'
-                            ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
-                            : 'bg-brand-100 text-brand-800 dark:bg-brand-950 dark:text-brand-300'
+                              ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                              : 'bg-brand-100 text-brand-800 dark:bg-brand-950 dark:text-brand-300'
                         }`}
                       >
                         {insight.severity}
@@ -493,6 +506,8 @@ export const OverviewTab: FC<OverviewTabProps> = ({ plan, today, onNavigate }) =
         {/* Input form */}
         <form onSubmit={handleQuestionSubmit} className="flex gap-2">
           <input
+            id="copilot-input-question"
+            aria-label="Ask the celebration copilot a question about budget, vendors or timeline"
             type="text"
             value={inputQuestion}
             onChange={(e) => setInputQuestion(e.target.value)}
@@ -502,6 +517,7 @@ export const OverviewTab: FC<OverviewTabProps> = ({ plan, today, onNavigate }) =
           />
           <button
             type="submit"
+            aria-label="Submit question to celebration copilot"
             disabled={isAsking || !inputQuestion.trim()}
             className="btn-primary shrink-0"
           >

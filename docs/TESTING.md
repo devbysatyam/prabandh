@@ -21,16 +21,19 @@ e2e/            # Playwright end-to-end user journeys
 ## 2. Testing Execution
 
 - **Run all unit & engine tests**:
+
   ```bash
   npm test
   ```
 
 - **Run typecheck with strict flags**:
+
   ```bash
   npm run typecheck
   ```
 
 - **Run test coverage**:
+
   ```bash
   npm run coverage
   ```

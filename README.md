@@ -39,6 +39,7 @@ Anyone who has helped plan a family celebration in India knows how chaotic it ge
 Then **the guest list grows by 50 relatives** and nobody can easily say what that does to the catering bill, the banquet hall minimums, or the milestone deadlines for tasting sessions.
 
 Event planning is not one isolated task — it is a set of **deeply connected dependencies**:
+
 - 👥 **Guest count** drives catering headcount, plate guarantees, and room blocks.
 - 💰 **Budget allocations** constrain every vendor category and dictate contingency buffers.
 - 📅 **Venue confirmation** drives the entire pre-event milestone timeline and payment schedules.
@@ -68,9 +69,10 @@ Open any plan and the celebration assistant is right there. It evaluates the bud
 > **Suggestion** · Schedule in-person physical site recce to verify AC and sound curfew → _Open Venues_
 
 The ranking is completely deterministic, so it is instant and reliable even when offline. When online, **Gemini 3.5 AI** analyzes the verified facts to provide warm family advice in English or Hinglish:
-- *"Are we over budget right now?"*
-- *"What should I book or complete next?"*
-- *"How do I politely negotiate with the caterer?"*
+
+- _"Are we over budget right now?"_
+- _"What should I book or complete next?"_
+- _"How do I politely negotiate with the caterer?"_
 
 ---
 
@@ -89,31 +91,37 @@ The ranking is completely deterministic, so it is instant and reliable even when
 ## ✨ What it does
 
 ### 1. Connected Budget & Automated Trade-off Solver
+
 - Integer rupee calculations with largest remainder rounding (no rounding drift).
 - 10% protected contingency safety buffer.
 - Live redistribution sliders with category locking and +25% priority weighting.
 - Automated 3-way trade-off solver when over budget (scale guests, proportionally trim flexible categories, or tap contingency).
 
 ### 2. Banquet & Venue Hub with Site Recce Logging
+
 - Compare properties across capacity, AC, power backup, sound curfew, and corkage policies.
 - Physical in-person inspection checklist: AC testing, bridal room cleanliness, 23:00 curfew verification, parking capacity, food tasting.
 
 ### 3. Vendor Sourcing Matrix & Tasting Logs
+
 - Sourcing checklists across 8 core Indian categories (Catering, Decor, Photography, Music/DJ, Makeup, Priest, Logistics, Favors).
 - Itemized quote comparison matrix with plate pricing and advance terms.
 - Food tasting session logs with dish ratings and recipe adjustment notes.
 
 ### 4. Guest List, Family Sides & RSVP Manager
+
 - Family grouping by sides: Ladkewale (Groom), Ladkiwale (Bride), Mutual, General.
 - Dietary split tracking (Pure Veg, Jain without root vegetables, Non-Veg).
 - 1-click personalized WhatsApp invitation message generator.
 
 ### 5. Milestone Dependency Timeline & Day-of Runsheet
+
 - Lead-time scheduling relative to event date with critical path dependency chains.
 - Hour-by-hour day-of live run sheet with assigned family coordinators (POCs).
 - 1-click family WhatsApp broadcast of the day's itinerary.
 
 ### 6. Celebration Analytics & 4-Pillar Health Score
+
 - Real-time unit economics (cost per guest).
 - 4-Pillar Readiness Score (Financial Health, Timeline Pace, Vendor Sourcing, RSVP Conversion).
 - Category variance breakdown against cultural benchmarks.
@@ -132,6 +140,7 @@ The ranking is completely deterministic, so it is instant and reliable even when
 ## 🤖 GenAI usage
 
 Gemini is strictly used where language comprehension is required:
+
 1. **Intake Parser** (`/api/parse-intake`): Translates free-text prompts into structured parameters.
 2. **Quote Extractor** (`/api/extract-quote`): Parses unstructured WhatsApp vendor quotations.
 3. **Planning Copilot** (`/api/ask-copilot`): Answers family questions grounded in real plan facts.

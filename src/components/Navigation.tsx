@@ -39,11 +39,7 @@ const TABS: { id: TabId; label: string; icon: IconName }[] = [
   { id: 'analytics', label: 'Analytics & Readiness', icon: 'sparkle' },
 ];
 
-export const Navigation: FC<NavigationProps> = ({
-  currentTab,
-  onSelectTab,
-  badges,
-}) => {
+export const Navigation: FC<NavigationProps> = ({ currentTab, onSelectTab, badges }) => {
   return (
     <nav
       role="tablist"
@@ -72,7 +68,10 @@ export const Navigation: FC<NavigationProps> = ({
 
               {/* Dynamic status badges */}
               {tab.id === 'budget' && badges?.budgetWarning && (
-                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" title="Over budget alert" />
+                <span
+                  className="w-2 h-2 rounded-full bg-red-500 animate-pulse"
+                  title="Over budget alert"
+                />
               )}
               {tab.id === 'venues' && (badges?.venueCount ?? 0) > 0 && (
                 <span className="px-1.5 py-0.2 rounded-full text-[10px] font-medium bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">

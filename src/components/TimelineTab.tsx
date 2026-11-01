@@ -2,12 +2,7 @@ import { useState, useMemo, type FC } from 'react';
 import type { Plan, TaskStatus } from '../schemas';
 import type { Action } from '../state/planStore';
 import { Icon } from './Icon';
-import {
-  buildSchedule,
-  groupTasksByPhase,
-  propagateDelay,
-  diffDays,
-} from '../engine/timeline';
+import { buildSchedule, groupTasksByPhase, propagateDelay, diffDays } from '../engine/timeline';
 import { generateIcsCalendar } from '../engine/calendar';
 
 interface TimelineTabProps {
@@ -17,7 +12,10 @@ interface TimelineTabProps {
 }
 
 export const TimelineTab: FC<TimelineTabProps> = ({ plan, today, dispatch }) => {
-  const schedule = useMemo(() => buildSchedule(plan.tasks, plan.eventDate, today), [plan.tasks, plan.eventDate, today]);
+  const schedule = useMemo(
+    () => buildSchedule(plan.tasks, plan.eventDate, today),
+    [plan.tasks, plan.eventDate, today],
+  );
   const groupedPhases = useMemo(() => groupTasksByPhase(schedule), [schedule]);
 
   const [activeDelayTaskId, setActiveDelayTaskId] = useState<string | null>(null);
@@ -64,7 +62,8 @@ export const TimelineTab: FC<TimelineTabProps> = ({ plan, today, dispatch }) => 
               Dependency-Aware Timeline DAG
             </h3>
             <p className="text-xs text-stone-500 dark:text-stone-400">
-              Tasks respect dependencies and lead times. Simulating a delay automatically propagates downstream dates.
+              Tasks respect dependencies and lead times. Simulating a delay automatically propagates
+              downstream dates.
             </p>
           </div>
 
@@ -82,21 +81,31 @@ export const TimelineTab: FC<TimelineTabProps> = ({ plan, today, dispatch }) => 
         <div className="py-3 border-y border-stone-100 dark:border-stone-800 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div>
-              <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Milestones Done</span>
+              <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+                Milestones Done
+              </span>
               <p className="text-xl font-extrabold text-stone-900 dark:text-stone-100">
                 {completedCount} / {totalCount} ({completionPct}%)
               </p>
             </div>
             {overdueCount > 0 && (
               <div>
-                <span className="text-[11px] font-semibold text-red-500 uppercase tracking-wider">Overdue</span>
-                <p className="text-xl font-extrabold text-red-600 dark:text-red-400">{overdueCount}</p>
+                <span className="text-[11px] font-semibold text-red-500 uppercase tracking-wider">
+                  Overdue
+                </span>
+                <p className="text-xl font-extrabold text-red-600 dark:text-red-400">
+                  {overdueCount}
+                </p>
               </div>
             )}
             {atRiskCount > 0 && (
               <div>
-                <span className="text-[11px] font-semibold text-amber-500 uppercase tracking-wider">At Risk</span>
-                <p className="text-xl font-extrabold text-amber-600 dark:text-amber-400">{atRiskCount}</p>
+                <span className="text-[11px] font-semibold text-amber-500 uppercase tracking-wider">
+                  At Risk
+                </span>
+                <p className="text-xl font-extrabold text-amber-600 dark:text-amber-400">
+                  {atRiskCount}
+                </p>
               </div>
             )}
           </div>
@@ -127,7 +136,8 @@ export const TimelineTab: FC<TimelineTabProps> = ({ plan, today, dispatch }) => 
                   {group.title}
                 </h4>
                 <span className="text-xs text-stone-400 font-medium">
-                  {group.tasks.filter((t) => t.status === 'done').length} of {group.tasks.length} done
+                  {group.tasks.filter((t) => t.status === 'done').length} of {group.tasks.length}{' '}
+                  done
                 </span>
               </div>
 
@@ -147,10 +157,10 @@ export const TimelineTab: FC<TimelineTabProps> = ({ plan, today, dispatch }) => 
                         isDone
                           ? 'border-stone-200 dark:border-stone-800/80 bg-stone-50/40 dark:bg-stone-900/40 opacity-75'
                           : task.isOverdue
-                          ? 'border-red-300 dark:border-red-900/60 bg-red-50/20 dark:bg-red-950/10'
-                          : task.isAtRisk
-                          ? 'border-amber-300 dark:border-amber-900/60 bg-amber-50/20 dark:bg-amber-950/10'
-                          : 'border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900'
+                            ? 'border-red-300 dark:border-red-900/60 bg-red-50/20 dark:bg-red-950/10'
+                            : task.isAtRisk
+                              ? 'border-amber-300 dark:border-amber-900/60 bg-amber-50/20 dark:bg-amber-950/10'
+                              : 'border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900'
                       }`}
                     >
                       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -201,7 +211,8 @@ export const TimelineTab: FC<TimelineTabProps> = ({ plan, today, dispatch }) => 
                             </div>
 
                             <p className="text-xs text-stone-400 mt-0.5">
-                              Target Due: <strong>{task.dueDate}</strong> · Effective Finish: <strong>{task.effectiveDate}</strong>
+                              Target Due: <strong>{task.dueDate}</strong> · Effective Finish:{' '}
+                              <strong>{task.effectiveDate}</strong>
                               {task.assignee && ` · Lead: ${task.assignee}`}
                             </p>
                           </div>
@@ -211,9 +222,7 @@ export const TimelineTab: FC<TimelineTabProps> = ({ plan, today, dispatch }) => 
                         <div className="flex items-center gap-2 shrink-0">
                           <button
                             type="button"
-                            onClick={() =>
-                              setActiveDelayTaskId(isDelayModalOpen ? null : task.id)
-                            }
+                            onClick={() => setActiveDelayTaskId(isDelayModalOpen ? null : task.id)}
                             className="btn-quiet text-xs text-stone-500 hover:text-stone-800 dark:hover:text-stone-200"
                             title="Simulate delay to propagate downstream schedule"
                           >
@@ -256,7 +265,8 @@ export const TimelineTab: FC<TimelineTabProps> = ({ plan, today, dispatch }) => 
 
                           {affectedDownstream.length > 0 && (
                             <p className="text-amber-600 dark:text-amber-400 text-[11px]">
-                              ⚠️ Will shift {affectedDownstream.length} downstream dependent task(s).
+                              ⚠️ Will shift {affectedDownstream.length} downstream dependent
+                              task(s).
                             </p>
                           )}
                         </div>

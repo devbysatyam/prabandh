@@ -7,50 +7,52 @@ function devApiMiddleware() {
     name: 'promptwars-api-middleware',
     apply: 'serve' as const,
     configureServer(server: any) {
-      server.middlewares.use(async (req: IncomingMessage, res: ServerResponse, next: () => void) => {
-        const url = req.url ?? '';
-        if (!url.startsWith('/api/')) {
-          return next();
-        }
-
-        const route = url.replace(/^\/api\//, '').split('?')[0];
-        let rawBody = '';
-        req.on('data', (chunk) => {
-          rawBody += chunk;
-        });
-
-        req.on('end', async () => {
-          let body: any = {};
-          if (rawBody) {
-            try {
-              body = JSON.parse(rawBody);
-            } catch {
-              body = { text: rawBody };
-            }
+      server.middlewares.use(
+        async (req: IncomingMessage, res: ServerResponse, next: () => void) => {
+          const url = req.url ?? '';
+          if (!url.startsWith('/api/')) {
+            return next();
           }
 
-          try {
-            const apiMod = await server.ssrLoadModule('/src/api/handler.ts');
-            const handler = apiMod.handleApiRequest;
-            if (typeof handler === 'function') {
-              const result = await handler(route, body, req.method ?? 'POST');
-              res.statusCode = result.status;
+          const route = url.replace(/^\/api\//, '').split('?')[0];
+          let rawBody = '';
+          req.on('data', (chunk) => {
+            rawBody += chunk;
+          });
+
+          req.on('end', async () => {
+            let body: any = {};
+            if (rawBody) {
+              try {
+                body = JSON.parse(rawBody);
+              } catch {
+                body = { text: rawBody };
+              }
+            }
+
+            try {
+              const apiMod = await server.ssrLoadModule('/src/api/handler.ts');
+              const handler = apiMod.handleApiRequest;
+              if (typeof handler === 'function') {
+                const result = await handler(route, body, req.method ?? 'POST');
+                res.statusCode = result.status;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify(result.data));
+                return;
+              }
+            } catch (err: any) {
+              res.statusCode = 500;
               res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify(result.data));
+              res.end(JSON.stringify({ error: err?.message || 'INTERNAL_SERVER_ERROR' }));
               return;
             }
-          } catch (err: any) {
-            res.statusCode = 500;
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ error: err?.message || 'INTERNAL_SERVER_ERROR' }));
-            return;
-          }
 
-          res.statusCode = 404;
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify({ error: 'ROUTE_NOT_FOUND' }));
-        });
-      });
+            res.statusCode = 404;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: 'ROUTE_NOT_FOUND' }));
+          });
+        },
+      );
     },
   };
 }

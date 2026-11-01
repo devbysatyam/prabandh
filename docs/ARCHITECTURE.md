@@ -10,7 +10,7 @@ Prabandh is an intelligent connected celebration planning platform for Indian fa
    The entire state of an event lives inside a single validated `Plan` schema. When any factor changes (guest headcount, budget, venue booking, quote verification, site visit), the whole graph recalculates instantly in under 16ms without race conditions.
 
 2. **Integer Rupee Arithmetic (Zero Floating Point Drift)**:
-   All money figures are non-negative integer rupees. Rounding across proportional distributions uses the **Hare-Niemeyer (Largest Remainder)** algorithm to guarantee that category allocations always sum *exactly* to the target budget with 0 rupee discrepancy.
+   All money figures are non-negative integer rupees. Rounding across proportional distributions uses the **Hare-Niemeyer (Largest Remainder)** algorithm to guarantee that category allocations always sum _exactly_ to the target budget with 0 rupee discrepancy.
 
 3. **10% Invariant Contingency Buffer**:
    Every celebration plan strictly reserves 10% of total funds for unforeseen surprises (diesel generator fuel, overtime fees, pandit samagri, last-minute room extensions).
@@ -21,8 +21,8 @@ Prabandh is an intelligent connected celebration planning platform for Indian fa
    - Unstructured vendor WhatsApp quote extraction
    - Grounded Q&A assistance via verified facts
    - Culturally authentic theme & ceremony ideas
-   
-   *Gemini never computes financial math, never shifts deadlines, and never hallucinates fake vendor quotes.*
+
+   _Gemini never computes financial math, never shifts deadlines, and never hallucinates fake vendor quotes._
 
 ---
 

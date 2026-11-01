@@ -103,7 +103,9 @@ export const PrintSummary: FC<PrintSummaryProps> = ({ plan }) => {
                   <td className="p-2 border font-mono font-bold">{item.time}</td>
                   <td className="p-2 border">
                     <strong>{item.title}</strong>
-                    {item.description && <span className="text-gray-600 block">{item.description}</span>}
+                    {item.description && (
+                      <span className="text-gray-600 block">{item.description}</span>
+                    )}
                   </td>
                   <td className="p-2 border">{item.coordinator ?? 'Host Family'}</td>
                 </tr>

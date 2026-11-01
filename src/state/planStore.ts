@@ -69,7 +69,10 @@ export interface PlanState {
   toast: { message: string; type: 'info' | 'success' | 'warn' } | null;
 }
 
-export function createDefaultPlan(intake: Intake, today: string = new Date().toISOString().slice(0, 10)): Plan {
+export function createDefaultPlan(
+  intake: Intake,
+  today: string = new Date().toISOString().slice(0, 10),
+): Plan {
   const allocation = allocate(intake.totalBudget, intake.occasion, intake.priorities);
   const perPlate = intake.guests > 0 ? Math.round(allocation.catering / intake.guests) : 1000;
 
@@ -190,7 +193,8 @@ export function createSamplePlan(today: string = new Date().toISOString().slice(
     cautionDeposit: 35000,
     address: 'NH-48 Pune Bypass, Bavdhan, Pune',
     status: 'booked',
-    notes: 'Breathtaking 100-year-old banyan tree mandap area with attached air-conditioned banquet hall.',
+    notes:
+      'Breathtaking 100-year-old banyan tree mandap area with attached air-conditioned banquet hall.',
   };
 
   const venue2: VenueDetail = {
@@ -223,18 +227,68 @@ export function createSamplePlan(today: string = new Date().toISOString().slice(
     soundCurfewOk: true,
     parkingAdequate: true,
     tastingDone: true,
-    tastingNotes: 'Tasted Gulab Jamun, live chaat, and Paneer Tikka. Exceptional quality and prompt service.',
-    notes: 'Checked power backup generator. Verified 4 bridal rooms with attached restrooms. Manager agreed to 25% token advance.',
+    tastingNotes:
+      'Tasted Gulab Jamun, live chaat, and Paneer Tikka. Exceptional quality and prompt service.',
+    notes:
+      'Checked power backup generator. Verified 4 bridal rooms with attached restrooms. Manager agreed to 25% token advance.',
     status: 'completed',
   };
 
   const sampleGuests: Guest[] = [
-    { id: 'g-1', name: 'Sharma Family (Groom Parents & Sister)', count: 4, side: 'groom', rsvp: 'confirmed', diet: 'veg', phone: '+91 98230 11223' },
-    { id: 'g-2', name: 'Verma Family (Bride Parents & Didi)', count: 5, side: 'bride', rsvp: 'confirmed', diet: 'veg', phone: '+91 98901 44556' },
-    { id: 'g-3', name: 'Rajesh & Sunita Kulkarni (Maternal Uncle)', count: 3, side: 'groom', rsvp: 'confirmed', diet: 'jain', phone: '+91 94220 77889' },
-    { id: 'g-4', name: 'Dr. Anand Joshi & Family', count: 4, side: 'mutual', rsvp: 'pending', diet: 'veg', phone: '+91 98225 33445' },
-    { id: 'g-5', name: 'College Friends Group (Dev, Rohan, Priya)', count: 6, side: 'groom', rsvp: 'confirmed', diet: 'any', phone: '+91 97654 11220' },
-    { id: 'g-6', name: 'Office Team (Satyam, Anjali, Vicky)', count: 5, side: 'bride', rsvp: 'pending', diet: 'veg', phone: '+91 99221 88990' },
+    {
+      id: 'g-1',
+      name: 'Sharma Family (Groom Parents & Sister)',
+      count: 4,
+      side: 'groom',
+      rsvp: 'confirmed',
+      diet: 'veg',
+      phone: '+91 98230 11223',
+    },
+    {
+      id: 'g-2',
+      name: 'Verma Family (Bride Parents & Didi)',
+      count: 5,
+      side: 'bride',
+      rsvp: 'confirmed',
+      diet: 'veg',
+      phone: '+91 98901 44556',
+    },
+    {
+      id: 'g-3',
+      name: 'Rajesh & Sunita Kulkarni (Maternal Uncle)',
+      count: 3,
+      side: 'groom',
+      rsvp: 'confirmed',
+      diet: 'jain',
+      phone: '+91 94220 77889',
+    },
+    {
+      id: 'g-4',
+      name: 'Dr. Anand Joshi & Family',
+      count: 4,
+      side: 'mutual',
+      rsvp: 'pending',
+      diet: 'veg',
+      phone: '+91 98225 33445',
+    },
+    {
+      id: 'g-5',
+      name: 'College Friends Group (Dev, Rohan, Priya)',
+      count: 6,
+      side: 'groom',
+      rsvp: 'confirmed',
+      diet: 'any',
+      phone: '+91 97654 11220',
+    },
+    {
+      id: 'g-6',
+      name: 'Office Team (Satyam, Anjali, Vicky)',
+      count: 5,
+      side: 'bride',
+      rsvp: 'pending',
+      diet: 'veg',
+      phone: '+91 99221 88990',
+    },
   ];
 
   const meeting1: VendorMeeting = {
@@ -247,7 +301,8 @@ export function createSamplePlan(today: string = new Date().toISOString().slice(
     attendees: 'Both Families (6 members)',
     rating: 5,
     dishesOrItemsTested: 'Dal Bukhara, Paneer Lababdar, Live Jalebi & Rabdi, Dahi Bhalla',
-    feedback: 'Food was delicious. Requested slightly less spice in Dal Makhani for elderly guests. Head chef Ramesh agreed.',
+    feedback:
+      'Food was delicious. Requested slightly less spice in Dal Makhani for elderly guests. Head chef Ramesh agreed.',
     status: 'completed',
   };
 
@@ -273,7 +328,10 @@ export function planReducer(state: PlanState, action: Action): PlanState {
 
   if (action.type === 'loadSamplePlan') {
     const sample = createSamplePlan();
-    return { plan: sample, toast: { message: 'Loaded curated celebration demo plan!', type: 'success' } };
+    return {
+      plan: sample,
+      toast: { message: 'Loaded curated celebration demo plan!', type: 'success' },
+    };
   }
 
   if (action.type === 'loadPlan') {
@@ -365,12 +423,21 @@ export function planReducer(state: PlanState, action: Action): PlanState {
 
     case 'setTaskDelay': {
       const tasks = p.tasks.map((t) =>
-        t.id === action.taskId ? { ...t, delayDays: action.delayDays, status: (action.delayDays > 0 ? 'delayed' : 'todo') as TaskStatus } : t,
+        t.id === action.taskId
+          ? {
+              ...t,
+              delayDays: action.delayDays,
+              status: (action.delayDays > 0 ? 'delayed' : 'todo') as TaskStatus,
+            }
+          : t,
       );
       return {
         ...state,
         plan: { ...p, tasks },
-        toast: { message: `Applied ${action.delayDays} day delay. Downstream dates updated.`, type: 'warn' },
+        toast: {
+          message: `Applied ${action.delayDays} day delay. Downstream dates updated.`,
+          type: 'warn',
+        },
       };
     }
 
@@ -511,8 +578,13 @@ export function planReducer(state: PlanState, action: Action): PlanState {
     }
 
     case 'updateIntake': {
-      const allocation = allocate(action.intake.totalBudget, action.intake.occasion, action.intake.priorities);
-      const perPlate = action.intake.guests > 0 ? Math.round(allocation.catering / action.intake.guests) : 1000;
+      const allocation = allocate(
+        action.intake.totalBudget,
+        action.intake.occasion,
+        action.intake.priorities,
+      );
+      const perPlate =
+        action.intake.guests > 0 ? Math.round(allocation.catering / action.intake.guests) : 1000;
       const updated: Plan = {
         ...p,
         occasion: action.intake.occasion,
@@ -543,7 +615,9 @@ export function planReducer(state: PlanState, action: Action): PlanState {
     }
 
     case 'updateSiteVisit': {
-      const siteVisits = (p.siteVisits ?? []).map((v) => (v.id === action.visit.id ? action.visit : v));
+      const siteVisits = (p.siteVisits ?? []).map((v) =>
+        v.id === action.visit.id ? action.visit : v,
+      );
       return { ...state, plan: { ...p, siteVisits } };
     }
 
@@ -557,12 +631,17 @@ export function planReducer(state: PlanState, action: Action): PlanState {
       return {
         ...state,
         plan: { ...p, vendorMeetings },
-        toast: { message: `Logged tasting/meeting with "${action.meeting.vendorName}".`, type: 'success' },
+        toast: {
+          message: `Logged tasting/meeting with "${action.meeting.vendorName}".`,
+          type: 'success',
+        },
       };
     }
 
     case 'updateVendorMeeting': {
-      const vendorMeetings = (p.vendorMeetings ?? []).map((m) => (m.id === action.meeting.id ? action.meeting : m));
+      const vendorMeetings = (p.vendorMeetings ?? []).map((m) =>
+        m.id === action.meeting.id ? action.meeting : m,
+      );
       return { ...state, plan: { ...p, vendorMeetings } };
     }
 

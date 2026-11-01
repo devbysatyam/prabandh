@@ -1,4 +1,11 @@
-import { CATEGORIES, type Category, type Occasion, type Plan, type Quote, type Vendor } from '../schemas';
+import {
+  CATEGORIES,
+  type Category,
+  type Occasion,
+  type Plan,
+  type Quote,
+  type Vendor,
+} from '../schemas';
 import { formatINR } from './money';
 import { OCCASION_LABELS } from './presets';
 
@@ -142,7 +149,8 @@ export function compareQuoteToBudget(
     flags.push({
       type: 'warn',
       code: 'TAX_UNSPECIFIED',
-      message: 'GST/Tax is not specified. Ensure quote is GST-inclusive to avoid unexpected 18% additional bill.',
+      message:
+        'GST/Tax is not specified. Ensure quote is GST-inclusive to avoid unexpected 18% additional bill.',
     });
   } else if (quote.taxIncluded === false) {
     flags.push({
@@ -157,7 +165,8 @@ export function compareQuoteToBudget(
     flags.push({
       type: 'warn',
       code: 'NO_CANCELLATION_POLICY',
-      message: 'No cancellation or date-change policy stated in quote. Request clear terms in writing.',
+      message:
+        'No cancellation or date-change policy stated in quote. Request clear terms in writing.',
     });
   }
 
@@ -218,16 +227,24 @@ export function generateVendorInquiry(
   const missingPoints: string[] = [];
 
   if (quote.taxIncluded === null) {
-    missingPoints.push('Could you confirm whether the quoted price includes 18% GST or if taxes are extra?');
+    missingPoints.push(
+      'Could you confirm whether the quoted price includes 18% GST or if taxes are extra?',
+    );
   }
   if (!quote.cancellationPolicy) {
-    missingPoints.push('What are your cancellation and date-rescheduling policies if plans need to adjust?');
+    missingPoints.push(
+      'What are your cancellation and date-rescheduling policies if plans need to adjust?',
+    );
   }
   if (quote.advancePercent !== null && quote.advancePercent > 35) {
-    missingPoints.push(`Regarding the ${quote.advancePercent}% advance, can we structure it as 25% token advance and the remainder on the event week?`);
+    missingPoints.push(
+      `Regarding the ${quote.advancePercent}% advance, can we structure it as 25% token advance and the remainder on the event week?`,
+    );
   }
   if (quote.guestMinimum !== null && quote.guestMinimum > guestCount) {
-    missingPoints.push(`Our current guest list is ${guestCount}. Is it possible to adjust the ${quote.guestMinimum} minimum plate guarantee?`);
+    missingPoints.push(
+      `Our current guest list is ${guestCount}. Is it possible to adjust the ${quote.guestMinimum} minimum plate guarantee?`,
+    );
   }
 
   return `Namaste ${vendorName || 'Ji'}! 🙏\n\nThank you for sharing your proposal for our upcoming celebration on ${eventDate}. We really appreciate your offerings.\n\nWe are reviewing our budget for ${category} and had a few quick questions:\n${missingPoints.map((p, i) => `${i + 1}. ${p}`).join('\n')}\n\nLooking forward to hearing from you so we can finalize our booking soon.\n\nWarm regards,\nHost Family`;
@@ -244,9 +261,12 @@ export function vendorChecklist(plan: Plan): VendorChecklistItem[] {
   return bookableCategories.map((cat) => {
     const matchingVendors = plan.vendors.filter((v) => v.category === cat);
     const matchingQuotes = (plan.quotes ?? []).filter((q) => q.category === cat);
-    const hasBooked = matchingVendors.some((v) => v.status === 'booked') || matchingQuotes.some((q) => q.accepted);
-    const hasQuoted = matchingQuotes.length > 0 || matchingVendors.some((v) => v.status === 'quoted' || v.quote);
-    const isContacted = plan.contacted?.includes(cat) || matchingVendors.some((v) => v.status === 'contacted');
+    const hasBooked =
+      matchingVendors.some((v) => v.status === 'booked') || matchingQuotes.some((q) => q.accepted);
+    const hasQuoted =
+      matchingQuotes.length > 0 || matchingVendors.some((v) => v.status === 'quoted' || v.quote);
+    const isContacted =
+      plan.contacted?.includes(cat) || matchingVendors.some((v) => v.status === 'contacted');
 
     let status: ChecklistStatus = 'not_started';
     if (hasBooked) status = 'booked';

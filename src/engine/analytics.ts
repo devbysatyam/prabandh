@@ -90,7 +90,9 @@ export function computeCelebrationAnalytics(plan: Plan, today: string): Celebrat
   const vendorTastingsAvgRating =
     vendorTastingsCompleted > 0
       ? Math.round(
-          (completedTastings.reduce((acc, m) => acc + (m.rating || 4), 0) / vendorTastingsCompleted) * 10,
+          (completedTastings.reduce((acc, m) => acc + (m.rating || 4), 0) /
+            vendorTastingsCompleted) *
+            10,
         ) / 10
       : 0;
 
@@ -152,7 +154,10 @@ export function computeCelebrationAnalytics(plan: Plan, today: string): Celebrat
 
   if (overdueTasks.length > 0) {
     keyActionRecommendations.push(
-      `${overdueTasks.length} milestone tasks are overdue (${overdueTasks.map((t) => t.title).slice(0, 2).join(', ')}). Prioritize closing them this week.`,
+      `${overdueTasks.length} milestone tasks are overdue (${overdueTasks
+        .map((t) => t.title)
+        .slice(0, 2)
+        .join(', ')}). Prioritize closing them this week.`,
     );
   }
 

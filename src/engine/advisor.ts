@@ -5,7 +5,8 @@ import { formatINR } from './money';
 import { buildSchedule, diffDays } from './timeline';
 
 export type InsightSeverity = 'critical' | 'warning' | 'suggestion';
-export type InsightTab = 'overview' | 'budget' | 'venues' | 'guests' | 'timeline' | 'vendors' | 'runsheet';
+export type InsightTab =
+  'overview' | 'budget' | 'venues' | 'guests' | 'timeline' | 'vendors' | 'runsheet';
 
 export interface Insight {
   id: string;
@@ -103,14 +104,19 @@ export function planInsights(plan: Plan, today: string): Insight[] {
   }
 
   // 7. General suggestion
-  const unquotedCategories = plan.vendors.filter((v) => v.status === 'shortlisted' || v.status === 'contacted');
+  const unquotedCategories = plan.vendors.filter(
+    (v) => v.status === 'shortlisted' || v.status === 'contacted',
+  );
   if (unquotedCategories.length > 0) {
     insights.push({
       id: 'insight-quotes-needed',
       severity: 'suggestion',
       tab: 'vendors',
       title: `Compare quotes for ${unquotedCategories.length} pending vendor categories`,
-      detail: `Collect quotes for ${unquotedCategories.map((v) => v.category).slice(0, 3).join(', ')} to turn estimates into verified numbers.`,
+      detail: `Collect quotes for ${unquotedCategories
+        .map((v) => v.category)
+        .slice(0, 3)
+        .join(', ')} to turn estimates into verified numbers.`,
     });
   }
 
@@ -152,14 +158,25 @@ export function localAnswer(question: string, plan: Plan, today: string): string
   const schedule = buildSchedule(plan.tasks, plan.eventDate, today);
   const guests = aggregateGuests(plan.guestList);
 
-  if (q.includes('over budget') || q.includes('budget') || q.includes('kharcha') || q.includes('paisa')) {
+  if (
+    q.includes('over budget') ||
+    q.includes('budget') ||
+    q.includes('kharcha') ||
+    q.includes('paisa')
+  ) {
     if (status.isOverBudget) {
       return `You are currently over budget by ${formatINR(status.overBy)}. This is because your guest count (${plan.guests}) at ${formatINR(plan.perPlate)}/plate requires more catering than allocated. Please check the Budget tab to apply one of the 3 automated options: trim guests, adjust flexible categories, or use your ${formatINR(status.contingencyLeft)} contingency buffer.`;
     }
     return `Your budget is in good standing! Out of your total ${formatINR(status.total)} budget, ${formatINR(status.committed)} is committed to booked vendors, and you still have ${formatINR(status.total - status.committed)} in remaining buffer and estimates.`;
   }
 
-  if (q.includes('next') || q.includes('kya karu') || q.includes('priority') || q.includes('task') || q.includes('due')) {
+  if (
+    q.includes('next') ||
+    q.includes('kya karu') ||
+    q.includes('priority') ||
+    q.includes('task') ||
+    q.includes('due')
+  ) {
     const overdue = schedule.filter((t) => t.isOverdue);
     if (overdue.length > 0) {
       return `Your top priority right now is resolving ${overdue.length} overdue task(s), especially: "${overdue[0]?.title}". Open the Timeline tab to mark it completed or adjust its lead time.`;
@@ -178,7 +195,12 @@ export function localAnswer(question: string, plan: Plan, today: string): string
     return `You have set a target headcount of ${plan.guests} guests. Switch to the Guests tab to start adding families and tracking RSVPs with automatic catering recalculation.`;
   }
 
-  if (q.includes('vendor') || q.includes('caterer') || q.includes('negotiat') || q.includes('quote')) {
+  if (
+    q.includes('vendor') ||
+    q.includes('caterer') ||
+    q.includes('negotiat') ||
+    q.includes('quote')
+  ) {
     return `You have ${plan.vendors.filter((v) => v.status === 'booked').length} booked vendors. For unbooked vendors, make sure to ask whether taxes (18% GST) are included, check for minimum plate guarantees, and negotiate advances down to 25%–30%. You can generate instant WhatsApp negotiation messages from the Vendors tab!`;
   }
 

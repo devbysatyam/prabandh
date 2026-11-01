@@ -46,7 +46,8 @@ export const IdeasTab: FC<IdeasTabProps> = ({ plan }) => {
             Curated Inspiration & Personal Touches
           </h3>
           <p className="text-xs text-stone-500 dark:text-stone-400">
-            Occasion-tuned themes, authentic food styles, interactive activities, and invitation wording. (No commercial prices or brand sponsorships).
+            Occasion-tuned themes, authentic food styles, interactive activities, and invitation
+            wording. (No commercial prices or brand sponsorships).
           </p>
         </div>
 
@@ -118,7 +119,10 @@ export const IdeasTab: FC<IdeasTabProps> = ({ plan }) => {
               </h4>
               <ul className="space-y-2">
                 {ideas.foodStyle.map((dish, i) => (
-                  <li key={i} className="text-xs text-stone-700 dark:text-stone-300 flex items-start gap-2">
+                  <li
+                    key={i}
+                    className="text-xs text-stone-700 dark:text-stone-300 flex items-start gap-2"
+                  >
                     <span className="text-brand-600 mt-0.5">🍲</span>
                     <span>{dish}</span>
                   </li>
@@ -133,7 +137,10 @@ export const IdeasTab: FC<IdeasTabProps> = ({ plan }) => {
               </h4>
               <ul className="space-y-2">
                 {ideas.activities.map((act, i) => (
-                  <li key={i} className="text-xs text-stone-700 dark:text-stone-300 flex items-start gap-2">
+                  <li
+                    key={i}
+                    className="text-xs text-stone-700 dark:text-stone-300 flex items-start gap-2"
+                  >
                     <span className="text-indigo-500 mt-0.5">✨</span>
                     <span>{act}</span>
                   </li>
@@ -149,7 +156,10 @@ export const IdeasTab: FC<IdeasTabProps> = ({ plan }) => {
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {ideas.personalTouches.map((touch, i) => (
-                <div key={i} className="p-3 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200 dark:border-stone-800 text-xs text-stone-700 dark:text-stone-300">
+                <div
+                  key={i}
+                  className="p-3 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200 dark:border-stone-800 text-xs text-stone-700 dark:text-stone-300"
+                >
                   <p>{touch}</p>
                 </div>
               ))}

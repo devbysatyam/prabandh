@@ -20,7 +20,7 @@ const PRESET_EXAMPLES = [
   },
   {
     label: "Kid's 7th Birthday Party (60 guests, ₹85,000)",
-    text: "Superhero themed 7th birthday celebration for my son, 60 guests, 85000 budget, next month. Games, magic show, and delicious snack boxes are top priorities.",
+    text: 'Superhero themed 7th birthday celebration for my son, 60 guests, 85000 budget, next month. Games, magic show, and delicious snack boxes are top priorities.',
   },
   {
     label: 'Parents 50th Golden Anniversary (120 guests, ₹6 Lakh)',
@@ -89,16 +89,16 @@ export const PlanSetup: FC<PlanSetupProps> = ({
         `✨ Vision recognized: ${result.guests} guests, ${formatINR(result.totalBudget)}, ${result.eventDate} in ${result.city || 'your city'}. Review values below and click Create / Save.`,
       );
     } catch {
-      setParseError('Could not parse text automatically. You can fill the form fields below manually.');
+      setParseError(
+        'Could not parse text automatically. You can fill the form fields below manually.',
+      );
     } finally {
       setIsParsing(false);
     }
   }
 
   function togglePriorityKey(id: string) {
-    setPriorityKeys((prev) =>
-      prev.includes(id) ? prev.filter((k) => k !== id) : [...prev, id],
-    );
+    setPriorityKeys((prev) => (prev.includes(id) ? prev.filter((k) => k !== id) : [...prev, id]));
   }
 
   function handleSubmit(e: FormEvent) {
@@ -106,9 +106,9 @@ export const PlanSetup: FC<PlanSetupProps> = ({
     const parsedBudget = parseINR(budgetString) ?? 1000000;
 
     const selectedItems = PRIORITY_ITEMS.filter((item) => priorityKeys.includes(item.id));
-    const uniqueCategories = Array.from(
-      new Set(selectedItems.map((item) => item.category)),
-    ).filter((c): c is Exclude<Category, 'contingency'> => c !== 'contingency');
+    const uniqueCategories = Array.from(new Set(selectedItems.map((item) => item.category))).filter(
+      (c): c is Exclude<Category, 'contingency'> => c !== 'contingency',
+    );
 
     const intake: Intake = {
       occasion,
@@ -142,7 +142,8 @@ export const PlanSetup: FC<PlanSetupProps> = ({
                 Editing Live Plan: {plan.title}
               </p>
               <p className="text-xs text-amber-700 dark:text-amber-300">
-                Updating your vision re-tunes budget allocations and catering formulas without losing your custom guest list or vendors.
+                Updating your vision re-tunes budget allocations and catering formulas without
+                losing your custom guest list or vendors.
               </p>
             </div>
           </div>
@@ -154,14 +155,17 @@ export const PlanSetup: FC<PlanSetupProps> = ({
 
       <div className="text-center mb-8">
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-brand-100 text-brand-800 dark:bg-brand-950 dark:text-brand-300 border border-brand-200 dark:border-brand-800 mb-3">
-          {plan ? 'Prabandh · प्रबंध · Section 1: Event Vision & Parameters' : 'Prabandh · प्रबंध · Step 1: Define Your Event'}
+          {plan
+            ? 'Prabandh · प्रबंध · Section 1: Event Vision & Parameters'
+            : 'Prabandh · प्रबंध · Step 1: Define Your Event'}
         </span>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-stone-900 dark:text-stone-50 tracking-tight">
           Plan the Celebration, Not the Spreadsheet
         </h2>
         <p className="mt-2 text-stone-600 dark:text-stone-400 max-w-xl mx-auto text-sm sm:text-base">
-          Describe your vision in plain English or Hinglish. Prabandh&apos;s connected engine builds your
-          complete budget, venue fit, timeline, vendor checklist, and run sheet in under a second.
+          Describe your vision in plain English or Hinglish. Prabandh&apos;s connected engine builds
+          your complete budget, venue fit, timeline, vendor checklist, and run sheet in under a
+          second.
         </p>
 
         {/* Demo celebration quick load button */}
@@ -189,9 +193,12 @@ export const PlanSetup: FC<PlanSetupProps> = ({
           </h3>
         </div>
         <p className="text-xs text-stone-500 dark:text-stone-400 mb-3">
-          Type or paste anything: budget (e.g. &quot;15 lakh&quot; or &quot;₹15,00,000&quot;), guest count, dates, city, and what matters most.
+          Type or paste anything: budget (e.g. &quot;15 lakh&quot; or &quot;₹15,00,000&quot;), guest
+          count, dates, city, and what matters most.
         </p>
         <textarea
+          id="nlp-event-intake-textarea"
+          aria-label="Natural Language Event Description Intake"
           rows={3}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -217,9 +224,7 @@ export const PlanSetup: FC<PlanSetupProps> = ({
         </div>
 
         <div className="mt-4 flex flex-col gap-2">
-          {parseError && (
-            <p className="text-xs text-amber-600 dark:text-amber-400">{parseError}</p>
-          )}
+          {parseError && <p className="text-xs text-amber-600 dark:text-amber-400">{parseError}</p>}
           {parseSuccess && (
             <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-800 dark:text-emerald-200 flex items-center justify-between">
               <span>{parseSuccess}</span>
@@ -263,10 +268,30 @@ export const PlanSetup: FC<PlanSetupProps> = ({
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { id: 'wedding', label: 'Wedding / Shaadi', icon: '💍', desc: 'Sangeet, Mandap, Feast' },
-              { id: 'kids_birthday', label: "Kid's Birthday", icon: '🎂', desc: 'Themes, Games, Cakes' },
-              { id: 'milestone', label: 'Milestone Jubilee', icon: '🏆', desc: '50th/60th, AV Tribute' },
-              { id: 'community', label: 'Community Gala', icon: '🪔', desc: 'Festivals & Bhandaras' },
+              {
+                id: 'wedding',
+                label: 'Wedding / Shaadi',
+                icon: '💍',
+                desc: 'Sangeet, Mandap, Feast',
+              },
+              {
+                id: 'kids_birthday',
+                label: "Kid's Birthday",
+                icon: '🎂',
+                desc: 'Themes, Games, Cakes',
+              },
+              {
+                id: 'milestone',
+                label: 'Milestone Jubilee',
+                icon: '🏆',
+                desc: '50th/60th, AV Tribute',
+              },
+              {
+                id: 'community',
+                label: 'Community Gala',
+                icon: '🪔',
+                desc: 'Festivals & Bhandaras',
+              },
             ].map((item) => {
               const isSelected = occasion === item.id;
               return (
@@ -282,7 +307,9 @@ export const PlanSetup: FC<PlanSetupProps> = ({
                 >
                   <span className="text-2xl mb-1">{item.icon}</span>
                   <div>
-                    <p className={`font-bold text-sm ${isSelected ? 'text-brand-700 dark:text-brand-300' : 'text-stone-900 dark:text-stone-100'}`}>
+                    <p
+                      className={`font-bold text-sm ${isSelected ? 'text-brand-700 dark:text-brand-300' : 'text-stone-900 dark:text-stone-100'}`}
+                    >
                       {item.label}
                     </p>
                     <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5">
@@ -299,7 +326,10 @@ export const PlanSetup: FC<PlanSetupProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label htmlFor="budget-input" className="text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300">
+              <label
+                htmlFor="budget-input"
+                className="text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300"
+              >
                 Total Budget (INR ₹)
               </label>
               <span className="text-xs font-semibold text-brand-600 dark:text-brand-400">
@@ -322,11 +352,20 @@ export const PlanSetup: FC<PlanSetupProps> = ({
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label htmlFor="guests-input" className="text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300">
+              <label
+                htmlFor="guests-input"
+                className="text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300"
+              >
                 Target Guest Headcount
               </label>
               <span className="text-xs text-stone-500">
-                ~{formatINR(currentParsedBudget > 0 && guests > 0 ? Math.round((currentParsedBudget * 0.35) / guests) : 0)}/plate
+                ~
+                {formatINR(
+                  currentParsedBudget > 0 && guests > 0
+                    ? Math.round((currentParsedBudget * 0.35) / guests)
+                    : 0,
+                )}
+                /plate
               </span>
             </div>
             <input
@@ -348,7 +387,10 @@ export const PlanSetup: FC<PlanSetupProps> = ({
         {/* Date and Location */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="date-input" className="block text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-1.5">
+            <label
+              htmlFor="date-input"
+              className="block text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-1.5"
+            >
               Celebration Date
             </label>
             <input
@@ -363,7 +405,10 @@ export const PlanSetup: FC<PlanSetupProps> = ({
           </div>
 
           <div>
-            <label htmlFor="city-input" className="block text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-1.5">
+            <label
+              htmlFor="city-input"
+              className="block text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-1.5"
+            >
               City / Destination
             </label>
             <input
@@ -379,7 +424,10 @@ export const PlanSetup: FC<PlanSetupProps> = ({
 
         {/* Vibe */}
         <div>
-          <label htmlFor="vibe-input" className="block text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-1.5">
+          <label
+            htmlFor="vibe-input"
+            className="block text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-1.5"
+          >
             Celebration Mood & Style
           </label>
           <input
@@ -400,7 +448,8 @@ export const PlanSetup: FC<PlanSetupProps> = ({
                 2. What Matters Most? (Priorities get +25% weight boost)
               </label>
               <p className="text-[11px] text-stone-500 dark:text-stone-400">
-                Select celebration focus areas. The allocation algorithm applies a deterministic +25% weight multiplier to each chosen dimension.
+                Select celebration focus areas. The allocation algorithm applies a deterministic
+                +25% weight multiplier to each chosen dimension.
               </p>
             </div>
             <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
@@ -436,7 +485,9 @@ export const PlanSetup: FC<PlanSetupProps> = ({
                   </div>
 
                   <div>
-                    <p className={`font-bold text-xs sm:text-sm ${isSelected ? 'text-brand-700 dark:text-brand-300' : 'text-stone-900 dark:text-stone-100'}`}>
+                    <p
+                      className={`font-bold text-xs sm:text-sm ${isSelected ? 'text-brand-700 dark:text-brand-300' : 'text-stone-900 dark:text-stone-100'}`}
+                    >
                       {item.label}
                     </p>
                     <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-1 line-clamp-2 leading-relaxed">

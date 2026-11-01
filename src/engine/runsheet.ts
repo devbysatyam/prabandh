@@ -10,10 +10,7 @@ export function sortRunSheet(items: RunSheetItem[]): RunSheetItem[] {
 /**
  * Toggles a run-sheet item status: pending -> in_progress -> completed -> pending.
  */
-export function cycleRunSheetStatus(
-  items: RunSheetItem[],
-  itemId: string,
-): RunSheetItem[] {
+export function cycleRunSheetStatus(items: RunSheetItem[], itemId: string): RunSheetItem[] {
   return items.map((item) => {
     if (item.id !== itemId) return item;
     let nextStatus: RunSheetItem['status'] = 'in_progress';
@@ -42,6 +39,7 @@ export function formatRunSheetWhatsapp(
     msg += '\n';
   }
 
-  msg += 'Please coordinate with designated family leads for any schedule updates. Have a wonderful celebration! 🎉';
+  msg +=
+    'Please coordinate with designated family leads for any schedule updates. Have a wonderful celebration! 🎉';
   return msg;
 }

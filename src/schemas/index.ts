@@ -33,7 +33,13 @@ export type Allocation = z.infer<typeof AllocationSchema>;
 export const TaskStatusSchema = z.enum(['todo', 'in_progress', 'done', 'delayed']);
 export type TaskStatus = z.infer<typeof TaskStatusSchema>;
 
-export const TaskPhaseSchema = z.enum(['foundation', 'vendor_booking', 'creative_invites', 'final_prep', 'event_week']);
+export const TaskPhaseSchema = z.enum([
+  'foundation',
+  'vendor_booking',
+  'creative_invites',
+  'final_prep',
+  'event_week',
+]);
 export type TaskPhase = z.infer<typeof TaskPhaseSchema>;
 
 export const TaskSchema = z.object({
@@ -160,7 +166,10 @@ export const PaymentMilestoneSchema = z.object({
   amount: z.number().int().min(0).max(MAX_BUDGET),
   dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'YYYY-MM-DD format'),
   status: z.enum(['pending', 'paid']),
-  paidDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  paidDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
 });
 export type PaymentMilestone = z.infer<typeof PaymentMilestoneSchema>;
 
@@ -184,7 +193,13 @@ export const VendorMeetingSchema = z.object({
   vendorName: z.string().min(1).max(150),
   category: CategorySchema,
   meetingDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'YYYY-MM-DD format'),
-  meetingType: z.enum(['food_tasting', 'makeup_trial', 'decor_mockup', 'sound_check', 'contract_discussion']),
+  meetingType: z.enum([
+    'food_tasting',
+    'makeup_trial',
+    'decor_mockup',
+    'sound_check',
+    'contract_discussion',
+  ]),
   attendees: z.string().max(200),
   rating: z.number().int().min(1).max(5).default(4),
   dishesOrItemsTested: z.string().max(300).optional(),
@@ -334,12 +349,14 @@ export const PlanReviewSchema = z.object({
   summary: z.string(),
   healthScore: z.number().min(0).max(100),
   topRisks: z.array(z.string()).max(4),
-  recommendedActions: z.array(
-    z.object({
-      title: z.string(),
-      description: z.string(),
-      impact: z.enum(['high', 'medium', 'low']),
-    }),
-  ).max(4),
+  recommendedActions: z
+    .array(
+      z.object({
+        title: z.string(),
+        description: z.string(),
+        impact: z.enum(['high', 'medium', 'low']),
+      }),
+    )
+    .max(4),
 });
 export type PlanReview = z.infer<typeof PlanReviewSchema>;

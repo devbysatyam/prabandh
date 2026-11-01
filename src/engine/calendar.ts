@@ -2,11 +2,7 @@ import type { ScheduledTask } from './timeline';
 import type { RunSheetItem } from '../schemas';
 
 function escapeIcsText(str: string): string {
-  return str
-    .replace(/\\/g, '\\\\')
-    .replace(/;/g, '\\;')
-    .replace(/,/g, '\\,')
-    .replace(/\n/g, '\\n');
+  return str.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
 }
 
 function foldLine(line: string): string {

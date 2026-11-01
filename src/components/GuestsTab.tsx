@@ -86,7 +86,8 @@ export const GuestsTab: FC<GuestsTabProps> = ({ plan, dispatch }) => {
               Guest List & RSVP Manager
             </h3>
             <p className="text-xs text-stone-500 dark:text-stone-400">
-              Manage families, sides, and meal preferences. Directly feeds the master headcount into catering calculations.
+              Manage families, sides, and meal preferences. Directly feeds the master headcount into
+              catering calculations.
             </p>
           </div>
 
@@ -113,22 +114,34 @@ export const GuestsTab: FC<GuestsTabProps> = ({ plan, dispatch }) => {
         {/* 4 Metrics Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 py-3 border-y border-stone-100 dark:border-stone-800">
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Total Headcount</span>
-            <p className="text-2xl font-extrabold text-stone-900 dark:text-stone-100">{summary.totalInvitedCount}</p>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Total Headcount
+            </span>
+            <p className="text-2xl font-extrabold text-stone-900 dark:text-stone-100">
+              {summary.totalInvitedCount}
+            </p>
             <p className="text-[11px] text-stone-500">{summary.totalEntries} families listed</p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Confirmed RSVPs</span>
-            <p className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">{summary.confirmedCount}</p>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Confirmed RSVPs
+            </span>
+            <p className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">
+              {summary.confirmedCount}
+            </p>
             <p className="text-[11px] text-stone-500">{summary.confirmationRate}% confirmed</p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Pending Responses</span>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Pending Responses
+            </span>
             <p className="text-2xl font-extrabold text-amber-500">{summary.pendingCount}</p>
             <p className="text-[11px] text-stone-500">Need follow-up</p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Declined</span>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Declined
+            </span>
             <p className="text-2xl font-extrabold text-stone-400">{summary.declinedCount}</p>
             <p className="text-[11px] text-stone-500">Seats freed</p>
           </div>
@@ -150,14 +163,18 @@ export const GuestsTab: FC<GuestsTabProps> = ({ plan, dispatch }) => {
           </div>
 
           <div className="text-stone-400 text-[11px]">
-            Target in Master Plan: <strong className="text-stone-700 dark:text-stone-200">{plan.guests} guests</strong>
+            Target in Master Plan:{' '}
+            <strong className="text-stone-700 dark:text-stone-200">{plan.guests} guests</strong>
           </div>
         </div>
       </section>
 
       {/* Add Guest Modal / Card */}
       {showAddForm && (
-        <form onSubmit={handleAddGuest} className="card border-brand-300 dark:border-brand-900 bg-brand-50/20 dark:bg-brand-950/20 space-y-4">
+        <form
+          onSubmit={handleAddGuest}
+          className="card border-brand-300 dark:border-brand-900 bg-brand-50/20 dark:bg-brand-950/20 space-y-4"
+        >
           <div className="flex items-center justify-between">
             <h4 className="font-bold text-sm text-stone-900 dark:text-stone-100">
               Add Family / Guest Entry
@@ -173,10 +190,15 @@ export const GuestsTab: FC<GuestsTabProps> = ({ plan, dispatch }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="guest-name-input"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Family / Guest Name
               </label>
               <input
+                id="guest-name-input"
+                aria-label="Family or guest name"
                 type="text"
                 required
                 value={name}
@@ -187,10 +209,15 @@ export const GuestsTab: FC<GuestsTabProps> = ({ plan, dispatch }) => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="guest-count-input"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Attendee Count
               </label>
               <input
+                id="guest-count-input"
+                aria-label="Number of attendees in family"
                 type="number"
                 min={1}
                 max={50}
@@ -202,10 +229,15 @@ export const GuestsTab: FC<GuestsTabProps> = ({ plan, dispatch }) => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="guest-side-select"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Family Side
               </label>
               <select
+                id="guest-side-select"
+                aria-label="Family side"
                 value={side}
                 onChange={(e) => setSide(e.target.value as GuestSide)}
                 className="input-base text-xs"
@@ -221,10 +253,15 @@ export const GuestsTab: FC<GuestsTabProps> = ({ plan, dispatch }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="guest-rsvp-select"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 RSVP Status
               </label>
               <select
+                id="guest-rsvp-select"
+                aria-label="RSVP status"
                 value={rsvp}
                 onChange={(e) => setRsvp(e.target.value as RsvpStatus)}
                 className="input-base text-xs"
@@ -236,10 +273,15 @@ export const GuestsTab: FC<GuestsTabProps> = ({ plan, dispatch }) => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="guest-diet-select"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Dietary Preference
               </label>
               <select
+                id="guest-diet-select"
+                aria-label="Dietary preference"
                 value={diet}
                 onChange={(e) => setDiet(e.target.value as DietPreference)}
                 className="input-base text-xs"
@@ -252,10 +294,15 @@ export const GuestsTab: FC<GuestsTabProps> = ({ plan, dispatch }) => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="guest-phone-input"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 WhatsApp Phone (Optional)
               </label>
               <input
+                id="guest-phone-input"
+                aria-label="WhatsApp phone number"
                 type="text"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -266,10 +313,15 @@ export const GuestsTab: FC<GuestsTabProps> = ({ plan, dispatch }) => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+            <label
+              htmlFor="guest-notes-input"
+              className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+            >
               Notes / Special Requests
             </label>
             <input
+              id="guest-notes-input"
+              aria-label="Special requests and notes"
               type="text"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
@@ -299,6 +351,8 @@ export const GuestsTab: FC<GuestsTabProps> = ({ plan, dispatch }) => {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex-1 min-w-[200px]">
             <input
+              id="guest-search-input"
+              aria-label="Search guests by name or notes"
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -309,6 +363,8 @@ export const GuestsTab: FC<GuestsTabProps> = ({ plan, dispatch }) => {
 
           <div className="flex items-center gap-2">
             <select
+              id="guest-filter-side"
+              aria-label="Filter guests by family side"
               value={sideFilter}
               onChange={(e) => setSideFilter(e.target.value)}
               className="input-base text-xs w-32"
@@ -321,6 +377,8 @@ export const GuestsTab: FC<GuestsTabProps> = ({ plan, dispatch }) => {
             </select>
 
             <select
+              id="guest-filter-rsvp"
+              aria-label="Filter guests by RSVP status"
               value={rsvpFilter}
               onChange={(e) => setRsvpFilter(e.target.value)}
               className="input-base text-xs w-32"
@@ -379,6 +437,7 @@ export const GuestsTab: FC<GuestsTabProps> = ({ plan, dispatch }) => {
                     </td>
                     <td className="py-3 px-3">
                       <select
+                        aria-label={`RSVP status for ${guest.name}`}
                         value={guest.rsvp}
                         onChange={(e) => {
                           dispatch({
@@ -390,8 +449,8 @@ export const GuestsTab: FC<GuestsTabProps> = ({ plan, dispatch }) => {
                           guest.rsvp === 'confirmed'
                             ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300'
                             : guest.rsvp === 'declined'
-                            ? 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300'
-                            : 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300'
+                              ? 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300'
+                              : 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300'
                         }`}
                       >
                         <option value="confirmed">Confirmed</option>

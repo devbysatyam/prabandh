@@ -86,10 +86,7 @@ export function syncGuestCountWithList(plan: Plan, useConfirmedOnly = false): Pl
 /**
  * Generates ready-to-send WhatsApp invite / RSVP follow-up text for a guest.
  */
-export function formatGuestWhatsappInvite(
-  guest: Guest,
-  plan: Plan,
-): string {
+export function formatGuestWhatsappInvite(guest: Guest, plan: Plan): string {
   const name = guest.name;
   const countText = guest.count > 1 ? ` (${guest.count} guests)` : '';
   const dateFormatted = new Date(plan.eventDate).toLocaleDateString('en-IN', {

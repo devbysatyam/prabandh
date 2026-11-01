@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  formatINR,
-  toLakh,
-  parseINR,
-  largestRemainderRound,
-} from '../../src/engine/money';
+import { formatINR, toLakh, parseINR, largestRemainderRound } from '../../src/engine/money';
 
 describe('money.ts', () => {
   describe('formatINR', () => {

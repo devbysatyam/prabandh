@@ -13,12 +13,7 @@ interface HeaderProps {
   onOpenWhatsAppModal: () => void;
 }
 
-export const Header: FC<HeaderProps> = ({
-  plan,
-  today,
-  onReset,
-  onOpenWhatsAppModal,
-}) => {
+export const Header: FC<HeaderProps> = ({ plan, today, onReset, onOpenWhatsAppModal }) => {
   const [copiedShare, setCopiedShare] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
@@ -69,7 +64,10 @@ export const Header: FC<HeaderProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h1 className="font-bold text-stone-900 dark:text-stone-50 tracking-tight text-lg sm:text-xl">
-                Prabandh <span className="text-brand-600 dark:text-brand-400 font-extrabold text-sm uppercase px-1.5 py-0.5 rounded bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-800">प्रबंध</span>
+                Prabandh{' '}
+                <span className="text-brand-600 dark:text-brand-400 font-extrabold text-sm uppercase px-1.5 py-0.5 rounded bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-800">
+                  प्रबंध
+                </span>
               </h1>
             </div>
             <p className="text-xs text-stone-500 dark:text-stone-400 font-medium">
@@ -130,9 +128,7 @@ export const Header: FC<HeaderProps> = ({
                 title="Copy shareable link"
               >
                 <Icon name="share" className="w-4 h-4" />
-                <span className="hidden sm:inline">
-                  {copiedShare ? 'Link Copied!' : 'Share'}
-                </span>
+                <span className="hidden sm:inline">{copiedShare ? 'Link Copied!' : 'Share'}</span>
               </button>
 
               {/* Print Summary */}

@@ -32,7 +32,9 @@ describe('api/handler.ts', () => {
   it('handles parse-intake with deterministic fallback', async () => {
     const res = await handleApiRequest(
       'parse-intake',
-      { text: 'Grand Wedding in Pune, 200 guests, 15 lakh budget, premium catering and photography' },
+      {
+        text: 'Grand Wedding in Pune, 200 guests, 15 lakh budget, premium catering and photography',
+      },
       'POST',
     );
     expect(res.status).toBe(200);
@@ -58,7 +60,8 @@ budget is 50000`;
   });
 
   it('prevents false matching of year and words (e.g. 2027 kids does not match 2027 k)', async () => {
-    const trickyPrompt = 'Birthday for my daughter on 2027-02-20 with 80 guests. Total budget is 65000 with balloon decor';
+    const trickyPrompt =
+      'Birthday for my daughter on 2027-02-20 with 80 guests. Total budget is 65000 with balloon decor';
     const res = await handleApiRequest('parse-intake', { text: trickyPrompt }, 'POST');
     expect(res.status).toBe(200);
     expect(res.data.totalBudget).toBe(65000);
@@ -106,11 +109,7 @@ budget is 50000`;
   });
 
   it('handles review-plan providing health score and risks', async () => {
-    const res = await handleApiRequest(
-      'review-plan',
-      { plan: dummyPlan },
-      'POST',
-    );
+    const res = await handleApiRequest('review-plan', { plan: dummyPlan }, 'POST');
     expect(res.status).toBe(200);
     expect(res.data.healthScore).toBeGreaterThanOrEqual(0);
     expect(res.data.summary).toBeDefined();

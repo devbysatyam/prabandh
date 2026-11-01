@@ -16,9 +16,12 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
   const { readiness, budgetStatus: bStatus, guestSummary: gSummary } = analytics;
 
   const tierColors = {
-    excellent: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800',
-    on_track: 'text-brand-600 bg-brand-50 dark:bg-brand-950/40 border-brand-300 dark:border-brand-800',
-    needs_attention: 'text-amber-600 bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800',
+    excellent:
+      'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800',
+    on_track:
+      'text-brand-600 bg-brand-50 dark:bg-brand-950/40 border-brand-300 dark:border-brand-800',
+    needs_attention:
+      'text-amber-600 bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800',
     critical: 'text-red-600 bg-red-50 dark:bg-red-950/40 border-red-300 dark:border-red-800',
   };
 
@@ -43,8 +46,8 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
               {plan.title} — Analytics & Health
             </h2>
             <p className="text-stone-300 text-xs sm:text-sm mt-1 max-w-2xl">
-              Real-time celebration analytics combining financial burn rate, per-guest unit economics,
-              RSVP conversion, recce ratings, and timeline execution health.
+              Real-time celebration analytics combining financial burn rate, per-guest unit
+              economics, RSVP conversion, recce ratings, and timeline execution health.
             </p>
           </div>
 
@@ -58,7 +61,9 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
                 <span className="text-lg text-stone-400 font-normal">/100</span>
               </span>
             </div>
-            <div className={`px-3 py-1.5 rounded-xl border text-xs font-bold ${tierColors[readiness.tier]}`}>
+            <div
+              className={`px-3 py-1.5 rounded-xl border text-xs font-bold ${tierColors[readiness.tier]}`}
+            >
               {tierLabels[readiness.tier]}
             </div>
           </div>
@@ -107,7 +112,9 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
           </p>
           <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
             {analytics.overdueTasksCount > 0 ? (
-              <span className="text-red-500 font-bold">{analytics.overdueTasksCount} tasks overdue</span>
+              <span className="text-red-500 font-bold">
+                {analytics.overdueTasksCount} tasks overdue
+              </span>
             ) : (
               <span className="text-emerald-500 font-semibold">Milestones on schedule</span>
             )}
@@ -134,7 +141,8 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
             {plan.vendors.filter((v) => v.status === 'booked').length} Booked
           </p>
           <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-            {analytics.siteVisitsCompleted} site visits · {analytics.vendorTastingsCompleted} tastings
+            {analytics.siteVisitsCompleted} site visits · {analytics.vendorTastingsCompleted}{' '}
+            tastings
           </p>
           <div className="mt-3 w-full bg-stone-100 dark:bg-stone-800 h-2 rounded-full overflow-hidden">
             <div
@@ -176,7 +184,8 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
           Analytics-Driven Priority Actions
         </h3>
         <p className="text-xs text-stone-500 dark:text-stone-400 mb-4">
-          Automated recommendations generated deterministically by evaluating budget gaps, RSVP velocity, and vendor trial logs.
+          Automated recommendations generated deterministically by evaluating budget gaps, RSVP
+          velocity, and vendor trial logs.
         </p>
 
         <div className="space-y-2.5">
@@ -204,7 +213,8 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
               Category Allocation vs {plan.occasion.replace('_', ' ')} Benchmark
             </h3>
             <p className="text-xs text-stone-500 dark:text-stone-400">
-              Evaluates whether your allocation matches cultural best-practice proportions or skews heavy/lean.
+              Evaluates whether your allocation matches cultural best-practice proportions or skews
+              heavy/lean.
             </p>
           </div>
           <button
@@ -240,9 +250,7 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
                   <td className="py-3 px-3 font-bold text-stone-900 dark:text-stone-100">
                     {c.allocatedPct}%
                   </td>
-                  <td className="py-3 px-3 text-stone-500">
-                    {c.benchmarkPct}%
-                  </td>
+                  <td className="py-3 px-3 text-stone-500">{c.benchmarkPct}%</td>
                   <td className="py-3 px-3 font-semibold">
                     {c.variancePct > 0 ? (
                       <span className="text-brand-600">+{c.variancePct}%</span>
@@ -258,8 +266,8 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
                         c.status === 'heavy'
                           ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
                           : c.status === 'lean'
-                          ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300'
-                          : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                            ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300'
+                            : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
                       }`}
                     >
                       {c.status}
@@ -280,21 +288,34 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
             <h4 className="font-bold text-sm text-stone-900 dark:text-stone-100">
               Dietary Preference Split
             </h4>
-            <span className="text-xs text-stone-500">{gSummary.totalInvitedCount} Total Guests</span>
+            <span className="text-xs text-stone-500">
+              {gSummary.totalInvitedCount} Total Guests
+            </span>
           </div>
           <div className="space-y-2">
             {[
               { label: 'Pure Vegetarian', count: gSummary.byDiet.veg, color: 'bg-emerald-500' },
-              { label: 'Jain (No Root Veggies)', count: gSummary.byDiet.jain, color: 'bg-gold-500' },
+              {
+                label: 'Jain (No Root Veggies)',
+                count: gSummary.byDiet.jain,
+                color: 'bg-gold-500',
+              },
               { label: 'Non-Vegetarian', count: gSummary.byDiet.non_veg, color: 'bg-rose-500' },
               { label: 'Unspecified / Any', count: gSummary.byDiet.any, color: 'bg-stone-400' },
             ].map((d) => {
-              const pct = gSummary.totalInvitedCount > 0 ? Math.round((d.count / gSummary.totalInvitedCount) * 100) : 0;
+              const pct =
+                gSummary.totalInvitedCount > 0
+                  ? Math.round((d.count / gSummary.totalInvitedCount) * 100)
+                  : 0;
               return (
                 <div key={d.label}>
                   <div className="flex justify-between text-xs mb-1">
-                    <span className="font-medium text-stone-700 dark:text-stone-300">{d.label}</span>
-                    <span className="font-bold text-stone-900 dark:text-stone-100">{d.count} ({pct}%)</span>
+                    <span className="font-medium text-stone-700 dark:text-stone-300">
+                      {d.label}
+                    </span>
+                    <span className="font-bold text-stone-900 dark:text-stone-100">
+                      {d.count} ({pct}%)
+                    </span>
                   </div>
                   <div className="w-full bg-stone-100 dark:bg-stone-800 h-2 rounded-full overflow-hidden">
                     <div className={`h-full ${d.color}`} style={{ width: `${pct}%` }} />
@@ -313,30 +334,42 @@ export const AnalyticsTab: FC<AnalyticsTabProps> = ({ plan, today, onNavigate })
           <div className="space-y-3">
             <div className="p-3 rounded-xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200/60 dark:border-stone-800 flex items-center justify-between">
               <div>
-                <p className="font-bold text-xs text-stone-900 dark:text-stone-100">Venue Site Visits</p>
-                <p className="text-[11px] text-stone-500">AC, green rooms, sound curfew & parking</p>
+                <p className="font-bold text-xs text-stone-900 dark:text-stone-100">
+                  Venue Site Visits
+                </p>
+                <p className="text-[11px] text-stone-500">
+                  AC, green rooms, sound curfew & parking
+                </p>
               </div>
               <div className="text-right">
                 <span className="text-lg font-extrabold text-stone-900 dark:text-stone-100">
                   {analytics.siteVisitsCompleted}
                 </span>
                 <p className="text-[10px] text-amber-500 font-bold">
-                  {analytics.siteVisitsAvgRating > 0 ? `★ ${analytics.siteVisitsAvgRating}/5.0` : 'Not rated yet'}
+                  {analytics.siteVisitsAvgRating > 0
+                    ? `★ ${analytics.siteVisitsAvgRating}/5.0`
+                    : 'Not rated yet'}
                 </p>
               </div>
             </div>
 
             <div className="p-3 rounded-xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200/60 dark:border-stone-800 flex items-center justify-between">
               <div>
-                <p className="font-bold text-xs text-stone-900 dark:text-stone-100">Vendor Tastings & Trials</p>
-                <p className="text-[11px] text-stone-500">Food tastings, makeup trials & sound checks</p>
+                <p className="font-bold text-xs text-stone-900 dark:text-stone-100">
+                  Vendor Tastings & Trials
+                </p>
+                <p className="text-[11px] text-stone-500">
+                  Food tastings, makeup trials & sound checks
+                </p>
               </div>
               <div className="text-right">
                 <span className="text-lg font-extrabold text-stone-900 dark:text-stone-100">
                   {analytics.vendorTastingsCompleted}
                 </span>
                 <p className="text-[10px] text-amber-500 font-bold">
-                  {analytics.vendorTastingsAvgRating > 0 ? `★ ${analytics.vendorTastingsAvgRating}/5.0` : 'Not rated yet'}
+                  {analytics.vendorTastingsAvgRating > 0
+                    ? `★ ${analytics.vendorTastingsAvgRating}/5.0`
+                    : 'Not rated yet'}
                 </p>
               </div>
             </div>

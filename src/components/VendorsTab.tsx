@@ -56,14 +56,20 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
   // Add Vendor Meeting / Tasting state
   const [showMeetingModal, setShowMeetingModal] = useState(false);
   const [meetingVendorId, setMeetingVendorId] = useState(plan.vendors[0]?.id ?? 'v-caterer');
-  const [meetingVendorName, setMeetingVendorName] = useState(plan.vendors[0]?.name ?? 'Master Caterers');
+  const [meetingVendorName, setMeetingVendorName] = useState(
+    plan.vendors[0]?.name ?? 'Master Caterers',
+  );
   const [meetingCategory, setMeetingCategory] = useState<Category>('catering');
   const [meetingDate, setMeetingDate] = useState(new Date().toISOString().slice(0, 10));
   const [meetingType, setMeetingType] = useState<VendorMeeting['meetingType']>('food_tasting');
   const [meetingAttendees, setMeetingAttendees] = useState('Both Families & Key Decision Makers');
   const [meetingRating, setMeetingRating] = useState(5);
-  const [meetingDishes, setMeetingDishes] = useState('Paneer Lababdar, Dal Bukhara, Angoori Gulab Jamun, Live Chaat');
-  const [meetingFeedback, setMeetingFeedback] = useState('Food quality was rich and authentic. Requested slightly milder spice in Dal Makhani for elderly guests.');
+  const [meetingDishes, setMeetingDishes] = useState(
+    'Paneer Lababdar, Dal Bukhara, Angoori Gulab Jamun, Live Chaat',
+  );
+  const [meetingFeedback, setMeetingFeedback] = useState(
+    'Food quality was rich and authentic. Requested slightly milder spice in Dal Makhani for elderly guests.',
+  );
 
   // Copied text state
   const [copiedInquiry, setCopiedInquiry] = useState(false);
@@ -223,7 +229,8 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
               Vendor & Sourcing Management (सप्लायर प्रबंधन)
             </h3>
             <p className="text-xs text-stone-500 dark:text-stone-400">
-              Track supplier outreach, compare competing WhatsApp quotations side-by-side, audit contractual terms, log food tasting & trial visits, and schedule installment payments.
+              Track supplier outreach, compare competing WhatsApp quotations side-by-side, audit
+              contractual terms, log food tasting & trial visits, and schedule installment payments.
             </p>
           </div>
 
@@ -258,28 +265,36 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
         {/* Pipeline counts */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 py-3 border-y border-stone-100 dark:border-stone-800">
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Confirmed</span>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Confirmed
+            </span>
             <p className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">
               {bookedCount} / {checklistItems.length}
             </p>
             <p className="text-[11px] text-stone-500">Categories locked</p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Outreach</span>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Outreach
+            </span>
             <p className="text-2xl font-extrabold text-stone-700 dark:text-stone-300">
               {checklistItems.filter((i) => i.contacted).length}
             </p>
             <p className="text-[11px] text-stone-500">Vendors contacted</p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Tasting & Trials</span>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Tasting & Trials
+            </span>
             <p className="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400">
               {vendorMeetings.length}
             </p>
             <p className="text-[11px] text-stone-500">In-person trials logged</p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Quotations</span>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Quotations
+            </span>
             <p className="text-2xl font-extrabold text-brand-600 dark:text-brand-400">
               {quotesList.length}
             </p>
@@ -361,10 +376,15 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
           <form onSubmit={handleAnalyzeQuote} className="space-y-3">
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="w-full sm:w-48">
-                <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+                <label
+                  htmlFor="quote-category-select"
+                  className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+                >
                   Category
                 </label>
                 <select
+                  id="quote-category-select"
+                  aria-label="Quotation Category"
                   value={quoteCategory}
                   onChange={(e) => setQuoteCategory(e.target.value as Category)}
                   className="input-base text-xs"
@@ -378,10 +398,15 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
               </div>
 
               <div className="flex-1">
-                <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+                <label
+                  htmlFor="quote-raw-textarea"
+                  className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+                >
                   Paste Raw Proposal (WhatsApp message or Email draft)
                 </label>
                 <textarea
+                  id="quote-raw-textarea"
+                  aria-label="Raw Vendor Proposal Text"
                   rows={3}
                   required
                   value={rawQuoteText}
@@ -408,7 +433,9 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
             <div className="mt-4 pt-4 border-t border-brand-200 dark:border-brand-900/60 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div className="p-3 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800">
-                  <span className="text-[10px] font-semibold text-stone-400 uppercase">Effective Total Cost</span>
+                  <span className="text-[10px] font-semibold text-stone-400 uppercase">
+                    Effective Total Cost
+                  </span>
                   <p className="text-xl font-bold text-stone-900 dark:text-stone-100">
                     {formatINR(comparison.effectiveCost)}
                   </p>
@@ -418,19 +445,31 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                 </div>
 
                 <div className="p-3 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800">
-                  <span className="text-[10px] font-semibold text-stone-400 uppercase">Rate Details</span>
+                  <span className="text-[10px] font-semibold text-stone-400 uppercase">
+                    Rate Details
+                  </span>
                   <p className="text-sm font-semibold text-stone-900 dark:text-stone-100">
-                    {extractedQuote.pricePerPlate ? `${formatINR(extractedQuote.pricePerPlate)}/plate` : 'Lump Sum'}
+                    {extractedQuote.pricePerPlate
+                      ? `${formatINR(extractedQuote.pricePerPlate)}/plate`
+                      : 'Lump Sum'}
                   </p>
                   <p className="text-xs text-stone-500">
-                    Min guarantee: {extractedQuote.guestMinimum ?? 'None'} · Advance: {extractedQuote.advancePercent ?? 'Unstated'}%
+                    Min guarantee: {extractedQuote.guestMinimum ?? 'None'} · Advance:{' '}
+                    {extractedQuote.advancePercent ?? 'Unstated'}%
                   </p>
                 </div>
 
                 <div className="p-3 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800">
-                  <span className="text-[10px] font-semibold text-stone-400 uppercase">Taxes & Cancellation</span>
+                  <span className="text-[10px] font-semibold text-stone-400 uppercase">
+                    Taxes & Cancellation
+                  </span>
                   <p className="text-sm font-semibold text-stone-900 dark:text-stone-100">
-                    GST: {extractedQuote.taxIncluded === true ? 'Included' : extractedQuote.taxIncluded === false ? 'Extra (+18%)' : 'Not stated'}
+                    GST:{' '}
+                    {extractedQuote.taxIncluded === true
+                      ? 'Included'
+                      : extractedQuote.taxIncluded === false
+                        ? 'Extra (+18%)'
+                        : 'Not stated'}
                   </p>
                   <p className="text-xs text-stone-500 truncate">
                     {extractedQuote.cancellationPolicy ?? 'No cancellation terms stated'}
@@ -454,7 +493,10 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                             : 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-900'
                         }`}
                       >
-                        <Icon name={f.type === 'warn' ? 'alert' : 'check'} className="w-4 h-4 shrink-0" />
+                        <Icon
+                          name={f.type === 'warn' ? 'alert' : 'check'}
+                          className="w-4 h-4 shrink-0"
+                        />
                         <span>{f.message}</span>
                       </div>
                     ))}
@@ -482,7 +524,9 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                   className="btn-secondary text-xs"
                 >
                   <Icon name="whatsapp" className="w-3.5 h-3.5 text-emerald-500" />
-                  {copiedInquiry ? 'Negotiation Message Copied!' : 'Copy WhatsApp Negotiation Message'}
+                  {copiedInquiry
+                    ? 'Negotiation Message Copied!'
+                    : 'Copy WhatsApp Negotiation Message'}
                 </button>
 
                 <div className="flex items-center gap-2">
@@ -510,7 +554,10 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
 
       {/* Add Vendor Form Modal */}
       {showAddVendor && (
-        <form onSubmit={handleCreateVendor} className="card border-stone-300 dark:border-stone-700 space-y-3">
+        <form
+          onSubmit={handleCreateVendor}
+          className="card border-stone-300 dark:border-stone-700 space-y-3"
+        >
           <div className="flex items-center justify-between">
             <h4 className="font-bold text-sm text-stone-900 dark:text-stone-100">Add New Vendor</h4>
             <button
@@ -523,10 +570,15 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="add-vendor-name"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Vendor Name
               </label>
               <input
+                id="add-vendor-name"
+                aria-label="Vendor or business name"
                 type="text"
                 required
                 value={vendorName}
@@ -536,10 +588,15 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="add-vendor-category"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Category
               </label>
               <select
+                id="add-vendor-category"
+                aria-label="Vendor category"
                 value={vendorCat}
                 onChange={(e) => setVendorCat(e.target.value as Category)}
                 className="input-base text-xs"
@@ -552,10 +609,15 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="add-vendor-phone"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Contact Phone (WhatsApp)
               </label>
               <input
+                id="add-vendor-phone"
+                aria-label="Vendor WhatsApp contact phone"
                 type="text"
                 value={vendorPhone}
                 onChange={(e) => setVendorPhone(e.target.value)}
@@ -581,7 +643,10 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
 
       {/* Record In-Person Tasting / Trial Meeting Modal */}
       {showMeetingModal && (
-        <form onSubmit={handleCreateMeeting} className="card border-indigo-300 dark:border-indigo-900 bg-indigo-50/20 dark:bg-indigo-950/20 space-y-3">
+        <form
+          onSubmit={handleCreateMeeting}
+          className="card border-indigo-300 dark:border-indigo-900 bg-indigo-50/20 dark:bg-indigo-950/20 space-y-3"
+        >
           <div className="flex items-center justify-between">
             <h4 className="font-bold text-sm text-stone-900 dark:text-stone-100 flex items-center gap-2">
               <Icon name="check" className="w-4 h-4 text-indigo-500" />
@@ -598,16 +663,23 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="meeting-vendor-name"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Vendor Name
               </label>
               <input
+                id="meeting-vendor-name"
+                aria-label="Vendor name for tasting or trial"
                 type="text"
                 required
                 value={meetingVendorName}
                 onChange={(e) => {
                   setMeetingVendorName(e.target.value);
-                  const found = plan.vendors.find((v) => v.name.toLowerCase() === e.target.value.toLowerCase());
+                  const found = plan.vendors.find(
+                    (v) => v.name.toLowerCase() === e.target.value.toLowerCase(),
+                  );
                   if (found) {
                     setMeetingVendorId(found.id);
                     setMeetingCategory(found.category);
@@ -618,10 +690,15 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="meeting-type-select"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Meeting / Visit Type
               </label>
               <select
+                id="meeting-type-select"
+                aria-label="Meeting or visit type"
                 value={meetingType}
                 onChange={(e) => setMeetingType(e.target.value as VendorMeeting['meetingType'])}
                 className="input-base text-xs"
@@ -634,10 +711,15 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="meeting-date-input"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Date of Meeting
               </label>
               <input
+                id="meeting-date-input"
+                aria-label="Date of meeting or food tasting"
                 type="date"
                 required
                 value={meetingDate}
@@ -649,10 +731,15 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="meeting-dishes-input"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Dishes / Items Sampled or Tested
               </label>
               <input
+                id="meeting-dishes-input"
+                aria-label="Dishes or menu items sampled"
                 type="text"
                 value={meetingDishes}
                 onChange={(e) => setMeetingDishes(e.target.value)}
@@ -661,10 +748,15 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="meeting-rating-select"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Overall Impression / Rating
               </label>
               <select
+                id="meeting-rating-select"
+                aria-label="Tasting rating out of 5 stars"
                 value={meetingRating}
                 onChange={(e) => setMeetingRating(parseInt(e.target.value, 10))}
                 className="input-base text-xs font-bold text-amber-500"
@@ -680,10 +772,15 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="meeting-attendees-input"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Attendees Present
               </label>
               <input
+                id="meeting-attendees-input"
+                aria-label="Attendees present at meeting"
                 type="text"
                 value={meetingAttendees}
                 onChange={(e) => setMeetingAttendees(e.target.value)}
@@ -692,10 +789,15 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="meeting-feedback-input"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Feedback & Recipe Adjustments
               </label>
               <input
+                id="meeting-feedback-input"
+                aria-label="Tasting feedback and recipe adjustments"
                 type="text"
                 required
                 value={meetingFeedback}
@@ -723,7 +825,10 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
 
       {/* Add Payment Milestone Modal */}
       {activeVendorForPayment && (
-        <form onSubmit={handleAddPaymentMilestone} className="card border-brand-300 bg-brand-50/20 space-y-3">
+        <form
+          onSubmit={handleAddPaymentMilestone}
+          className="card border-brand-300 bg-brand-50/20 space-y-3"
+        >
           <div className="flex items-center justify-between">
             <h4 className="font-bold text-sm text-stone-900 dark:text-stone-100">
               Add Payment Installment Milestone
@@ -738,10 +843,15 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="milestone-title-input"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Milestone Title
               </label>
               <input
+                id="milestone-title-input"
+                aria-label="Milestone payment title"
                 type="text"
                 required
                 value={milestoneTitle}
@@ -751,10 +861,15 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="milestone-amount-input"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Amount (INR ₹)
               </label>
               <input
+                id="milestone-amount-input"
+                aria-label="Milestone payment amount in rupees"
                 type="number"
                 min={1}
                 required
@@ -764,10 +879,15 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+              <label
+                htmlFor="milestone-due-date"
+                className="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1"
+              >
                 Due Date
               </label>
               <input
+                id="milestone-due-date"
+                aria-label="Milestone payment due date"
                 type="date"
                 required
                 value={milestoneDue}
@@ -800,7 +920,8 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                 Celebration Sourcing Checklist
               </h4>
               <p className="text-xs text-stone-500">
-                Mark suppliers as contacted once you begin conversations. Accepting a quote automatically marks the category locked.
+                Mark suppliers as contacted once you begin conversations. Accepting a quote
+                automatically marks the category locked.
               </p>
             </div>
             <span className="text-xs font-bold text-stone-600 dark:text-stone-300">
@@ -846,14 +967,14 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
-                      {item.hint}
-                    </p>
+                    <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">{item.hint}</p>
                   </div>
 
                   <div className="flex items-center gap-3">
                     <label className="flex items-center gap-1.5 text-xs font-semibold text-stone-700 dark:text-stone-300 cursor-pointer">
                       <input
+                        id={`contacted-checkbox-${item.category}`}
+                        aria-label={`Mark supplier for ${item.label} as contacted`}
                         type="checkbox"
                         checked={item.contacted}
                         onChange={() =>
@@ -904,14 +1025,22 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                   Side-by-Side Quotation Comparison Matrix
                 </h4>
                 <p className="text-xs text-stone-500">
-                  Compare multi-vendor proposals side-by-side on effective cost, minimum guarantees, advance payment risks, and hidden taxes.
+                  Compare multi-vendor proposals side-by-side on effective cost, minimum guarantees,
+                  advance payment risks, and hidden taxes.
                 </p>
               </div>
 
               {/* Category selector */}
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-stone-500">Category:</span>
+                <label
+                  htmlFor="comparison-category-select"
+                  className="text-xs font-semibold text-stone-500"
+                >
+                  Category:
+                </label>
                 <select
+                  id="comparison-category-select"
+                  aria-label="Quotation Comparison Category"
                   value={comparisonCategory}
                   onChange={(e) => setComparisonCategory(e.target.value as Category)}
                   className="input-base text-xs py-1"
@@ -939,10 +1068,12 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                   </div>
                   <div>
                     <h5 className="font-bold text-stone-800 dark:text-stone-200 text-sm">
-                      No Quotations Saved Yet for {OCCASION_LABELS[plan.occasion][comparisonCategory] ?? comparisonCategory}
+                      No Quotations Saved Yet for{' '}
+                      {OCCASION_LABELS[plan.occasion][comparisonCategory] ?? comparisonCategory}
                     </h5>
                     <p className="text-xs text-stone-500 max-w-md mx-auto mt-1">
-                      Paste WhatsApp proposals from your caterers, photographers, or decorators into the Quote Analyzer to compare them here side-by-side.
+                      Paste WhatsApp proposals from your caterers, photographers, or decorators into
+                      the Quote Analyzer to compare them here side-by-side.
                     </p>
                   </div>
                   <button
@@ -968,7 +1099,8 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
               <div className="card overflow-x-auto">
                 <div className="flex items-center justify-between mb-3">
                   <h5 className="font-bold text-sm text-stone-900 dark:text-stone-100">
-                    Comparing {categoryQuotes.length} Proposal{categoryQuotes.length > 1 ? 's' : ''} (Budget: {formatINR(categoryBudget)})
+                    Comparing {categoryQuotes.length} Proposal{categoryQuotes.length > 1 ? 's' : ''}{' '}
+                    (Budget: {formatINR(categoryBudget)})
                   </h5>
                   <button
                     type="button"
@@ -989,7 +1121,10 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                         Specification
                       </th>
                       {evaluated.map(({ sq }, i) => (
-                        <th key={sq.id} className="py-2.5 px-3 font-bold text-stone-900 dark:text-stone-100">
+                        <th
+                          key={sq.id}
+                          className="py-2.5 px-3 font-bold text-stone-900 dark:text-stone-100"
+                        >
                           <div className="flex items-center justify-between">
                             <span>{sq.quote.vendorName || `Proposal ${i + 1}`}</span>
                             {sq.accepted && (
@@ -1004,9 +1139,14 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                   </thead>
                   <tbody className="divide-y divide-stone-100 dark:divide-stone-800/60">
                     <tr>
-                      <td className="py-2.5 px-3 font-semibold text-stone-500">Effective Cost ({plan.guests} guests)</td>
+                      <td className="py-2.5 px-3 font-semibold text-stone-500">
+                        Effective Cost ({plan.guests} guests)
+                      </td>
                       {evaluated.map(({ sq, comp }) => (
-                        <td key={sq.id} className="py-2.5 px-3 font-extrabold text-stone-900 dark:text-stone-100 text-sm">
+                        <td
+                          key={sq.id}
+                          className="py-2.5 px-3 font-extrabold text-stone-900 dark:text-stone-100 text-sm"
+                        >
                           {formatINR(comp.effectiveCost)}
                         </td>
                       ))}
@@ -1031,23 +1171,33 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                       <td className="py-2.5 px-3 font-semibold text-stone-500">Rate Structure</td>
                       {evaluated.map(({ sq }) => (
                         <td key={sq.id} className="py-2.5 px-3 text-stone-700 dark:text-stone-300">
-                          {sq.quote.pricePerPlate ? `${formatINR(sq.quote.pricePerPlate)}/plate` : 'Lump Sum Package'}
+                          {sq.quote.pricePerPlate
+                            ? `${formatINR(sq.quote.pricePerPlate)}/plate`
+                            : 'Lump Sum Package'}
                         </td>
                       ))}
                     </tr>
                     <tr>
-                      <td className="py-2.5 px-3 font-semibold text-stone-500">Guest Minimum Guarantee</td>
+                      <td className="py-2.5 px-3 font-semibold text-stone-500">
+                        Guest Minimum Guarantee
+                      </td>
                       {evaluated.map(({ sq }) => (
                         <td key={sq.id} className="py-2.5 px-3 text-stone-700 dark:text-stone-300">
-                          {sq.quote.guestMinimum ? `${sq.quote.guestMinimum} guests` : 'None specified'}
+                          {sq.quote.guestMinimum
+                            ? `${sq.quote.guestMinimum} guests`
+                            : 'None specified'}
                         </td>
                       ))}
                     </tr>
                     <tr>
-                      <td className="py-2.5 px-3 font-semibold text-stone-500">Advance Payment Demanded</td>
+                      <td className="py-2.5 px-3 font-semibold text-stone-500">
+                        Advance Payment Demanded
+                      </td>
                       {evaluated.map(({ sq }) => (
                         <td key={sq.id} className="py-2.5 px-3 text-stone-700 dark:text-stone-300">
-                          {sq.quote.advancePercent !== null ? `${sq.quote.advancePercent}%` : 'Unspecified'}
+                          {sq.quote.advancePercent !== null
+                            ? `${sq.quote.advancePercent}%`
+                            : 'Unspecified'}
                         </td>
                       ))}
                     </tr>
@@ -1064,7 +1214,9 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                       ))}
                     </tr>
                     <tr>
-                      <td className="py-2.5 px-3 font-semibold text-stone-500">Contract Risk Flags</td>
+                      <td className="py-2.5 px-3 font-semibold text-stone-500">
+                        Contract Risk Flags
+                      </td>
                       {evaluated.map(({ sq, comp }) => (
                         <td key={sq.id} className="py-2.5 px-3 space-y-1">
                           {comp.flags.map((flag, idx) => (
@@ -1076,7 +1228,10 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                                   : 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300'
                               }`}
                             >
-                              <Icon name={flag.type === 'warn' ? 'alert' : 'check'} className="w-3 h-3 shrink-0" />
+                              <Icon
+                                name={flag.type === 'warn' ? 'alert' : 'check'}
+                                className="w-3 h-3 shrink-0"
+                              />
                               <span>{flag.message}</span>
                             </div>
                           ))}
@@ -1100,11 +1255,15 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                                 Accept & Lock
                               </button>
                             ) : (
-                              <span className="text-xs font-bold text-emerald-600">✓ Locked in</span>
+                              <span className="text-xs font-bold text-emerald-600">
+                                ✓ Locked in
+                              </span>
                             )}
                             <button
                               type="button"
-                              onClick={() => dispatch({ type: 'deleteStoredQuote', quoteId: sq.id })}
+                              onClick={() =>
+                                dispatch({ type: 'deleteStoredQuote', quoteId: sq.id })
+                              }
                               className="text-stone-400 hover:text-red-600 p-1"
                               title="Delete Quote"
                             >
@@ -1132,7 +1291,8 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                   Supplier Tasting & Trial Visits (सप्लायर मुलाक़ात व चखना सत्र)
                 </h4>
                 <p className="text-xs text-stone-500">
-                  Record food tastings with caterers, bridal makeup trials, mandap mockup walkthroughs, and DJ sound tests.
+                  Record food tastings with caterers, bridal makeup trials, mandap mockup
+                  walkthroughs, and DJ sound tests.
                 </p>
               </div>
               <button
@@ -1154,7 +1314,8 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                 No Tasting or Trial Visits Logged Yet
               </h5>
               <p className="text-xs text-stone-500 max-w-md mx-auto">
-                Schedule a food tasting session with your shortlisted caterer to sample main course gravies, live chaat, and sweets before locking in your booking.
+                Schedule a food tasting session with your shortlisted caterer to sample main course
+                gravies, live chaat, and sweets before locking in your booking.
               </p>
               <button
                 type="button"
@@ -1180,7 +1341,8 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                         {meeting.meetingType.replace('_', ' ')}
                       </span>
                       <span className="text-xs font-bold text-amber-500">
-                        {'★'.repeat(meeting.rating)}{'☆'.repeat(5 - meeting.rating)}
+                        {'★'.repeat(meeting.rating)}
+                        {'☆'.repeat(5 - meeting.rating)}
                       </span>
                     </div>
                     <p className="text-xs text-stone-500 mt-0.5">
@@ -1203,12 +1365,16 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                     <span className="font-semibold text-brand-600 dark:text-brand-400 block mb-0.5">
                       Items / Dishes Sampled:
                     </span>
-                    <p className="text-stone-800 dark:text-stone-200">{meeting.dishesOrItemsTested}</p>
+                    <p className="text-stone-800 dark:text-stone-200">
+                      {meeting.dishesOrItemsTested}
+                    </p>
                   </div>
                 )}
 
                 <div className="text-xs space-y-1">
-                  <span className="font-semibold text-stone-500 block">Feedback & Recipe Adjustments:</span>
+                  <span className="font-semibold text-stone-500 block">
+                    Feedback & Recipe Adjustments:
+                  </span>
                   <p className="text-stone-700 dark:text-stone-300 italic">{meeting.feedback}</p>
                 </div>
               </div>
@@ -1229,7 +1395,8 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                 No Booked Vendors Yet
               </h5>
               <p className="text-xs text-stone-500 max-w-sm mx-auto">
-                Use the Sourcing Checklist or Quote Comparison to lock in vendors and generate payment schedules.
+                Use the Sourcing Checklist or Quote Comparison to lock in vendors and generate
+                payment schedules.
               </p>
               <button
                 type="button"
@@ -1257,6 +1424,7 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                           {OCCASION_LABELS[plan.occasion][vendor.category] ?? vendor.category}
                         </span>
                         <select
+                          aria-label={`Status for vendor ${vendor.name}`}
                           value={vendor.status}
                           onChange={(e) => {
                             dispatch({
@@ -1280,7 +1448,9 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                     {/* Payment Overview */}
                     <div className="text-right flex items-center gap-4">
                       <div>
-                        <span className="text-[10px] font-semibold text-stone-400 uppercase">Paid / Total</span>
+                        <span className="text-[10px] font-semibold text-stone-400 uppercase">
+                          Paid / Total
+                        </span>
                         <p className="text-sm font-extrabold text-stone-900 dark:text-stone-100">
                           {formatINR(payments.totalPaid)} / {formatINR(payments.totalAgreed)}
                         </p>
@@ -1339,7 +1509,9 @@ export const VendorsTab: FC<VendorsTabProps> = ({ plan, dispatch }) => {
                             }`}
                           >
                             <div>
-                              <p className="font-bold text-stone-900 dark:text-stone-100">{pm.title}</p>
+                              <p className="font-bold text-stone-900 dark:text-stone-100">
+                                {pm.title}
+                              </p>
                               <p className="text-stone-500 font-semibold">{formatINR(pm.amount)}</p>
                               <p className="text-[10px] text-stone-400">Due: {pm.dueDate}</p>
                             </div>

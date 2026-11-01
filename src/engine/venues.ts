@@ -44,7 +44,9 @@ export function evaluateVenue(venue: VenueDetail, guestCount: number): VenueEval
   policyNotes.push(`Outdoor amplified sound curfew strictly at ${venue.curfewTime}.`);
 
   // Rooms
-  policyNotes.push(`${venue.roomsIncluded} air-conditioned green/bridal rooms included in booking.`);
+  policyNotes.push(
+    `${venue.roomsIncluded} air-conditioned green/bridal rooms included in booking.`,
+  );
 
   // Alcohol
   if (venue.alcoholAllowed) {

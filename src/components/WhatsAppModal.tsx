@@ -45,7 +45,8 @@ export const WhatsAppModal: FC<WhatsAppModalProps> = ({ plan, today, onClose }) 
         </div>
 
         <p className="text-xs text-stone-500 dark:text-stone-400">
-          A beautifully formatted update summarizing your budget status, confirmed RSVPs, and pending milestones, ready to post to your family WhatsApp group.
+          A beautifully formatted update summarizing your budget status, confirmed RSVPs, and
+          pending milestones, ready to post to your family WhatsApp group.
         </p>
 
         <div className="p-3.5 rounded-xl bg-stone-50 dark:bg-stone-950 font-mono text-xs text-stone-800 dark:text-stone-200 whitespace-pre-line max-h-72 overflow-y-auto border border-stone-200/80 dark:border-stone-800 leading-relaxed">

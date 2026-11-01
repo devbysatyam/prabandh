@@ -16,7 +16,8 @@ export interface ApiResponse<T = any> {
   data: T;
 }
 
-const API_KEY = process.env.GEMINI_API_KEY || 'AQ.Ab8RN6LIufQvKwMF095_XCTc99rv8tcAf29WmNIxgGY73Vw5oA';
+const API_KEY =
+  process.env.GEMINI_API_KEY || 'AQ.Ab8RN6LIufQvKwMF095_XCTc99rv8tcAf29WmNIxgGY73Vw5oA';
 const MODEL_NAME = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
 
 function getAiClient(): GoogleGenAI | null {
@@ -94,10 +95,26 @@ function extractDateFromText(text: string): string {
   }
 
   // 2. Look for textual month e.g. "15th Jan 2027", "15 January 2027"
-  const textMonth = /(\d{1,2})(?:st|nd|rd|th)?\s+(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+(\d{4})/i.exec(text);
+  const textMonth =
+    /(\d{1,2})(?:st|nd|rd|th)?\s+(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+(\d{4})/i.exec(
+      text,
+    );
   if (textMonth && textMonth[1] && textMonth[2] && textMonth[3]) {
     const day = textMonth[1].padStart(2, '0');
-    const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+    const months = [
+      'jan',
+      'feb',
+      'mar',
+      'apr',
+      'may',
+      'jun',
+      'jul',
+      'aug',
+      'sep',
+      'oct',
+      'nov',
+      'dec',
+    ];
     const monthPart = textMonth[2].toLowerCase();
     const mIdx = months.findIndex((m) => monthPart.startsWith(m));
     if (mIdx >= 0) {
@@ -121,7 +138,10 @@ function extractDateFromText(text: string): string {
 
 function extractBudgetFromText(text: string, occasion: Intake['occasion']): number {
   // 1. Explicit budget phrase: "budget is 50000", "budget: 50,000", "cost around 15 lakh"
-  const explicit = /(?:budget|cost|total|amount|kharcha)\s*(?:is|of|around|approx|approx\.|:|=)?\s*([₹\d,.]+\s*(?:lakhs?|lacs?|l\b|crores?|cr\b|k\b|thousands?)?)/i.exec(text);
+  const explicit =
+    /(?:budget|cost|total|amount|kharcha)\s*(?:is|of|around|approx|approx\.|:|=)?\s*([₹\d,.]+\s*(?:lakhs?|lacs?|l\b|crores?|cr\b|k\b|thousands?)?)/i.exec(
+      text,
+    );
   if (explicit && explicit[1]) {
     const p = parseINR(explicit[1]);
     if (p && p >= 1000) return p;
@@ -151,7 +171,10 @@ function extractBudgetFromText(text: string, occasion: Intake['occasion']): numb
 function extractGuestsFromText(text: string): number {
   const lower = text.toLowerCase();
   // Handles "150 guest", "150 guests", "200 pax", "80 people", "100 mehmaan", "50 kids"
-  const guestMatch = /(?:around|approx|approx\.)?\s*(\d+)\s*(?:guests?|people|pax|persons?|log|mehmaan|kids?|children|attendees?)\b/i.exec(lower);
+  const guestMatch =
+    /(?:around|approx|approx\.)?\s*(\d+)\s*(?:guests?|people|pax|persons?|log|mehmaan|kids?|children|attendees?)\b/i.exec(
+      lower,
+    );
   if (guestMatch && guestMatch[1]) {
     const num = parseInt(guestMatch[1], 10);
     if (!isNaN(num) && num > 0) return num;
@@ -235,7 +258,10 @@ function extractCityFromText(text: string): string | undefined {
   return undefined;
 }
 
-function extractPrioritiesFromText(text: string, occasion: Intake['occasion']): Intake['priorities'] {
+function extractPrioritiesFromText(
+  text: string,
+  occasion: Intake['occasion'],
+): Intake['priorities'] {
   const lower = text.toLowerCase();
   const priorities: Intake['priorities'] = [];
 
@@ -386,7 +412,10 @@ function localParseIntake(text: string): Intake {
 }
 
 /* 2. Extract Quote */
-async function handleExtractQuote(body: { text?: string; category?: string }): Promise<ApiResponse> {
+async function handleExtractQuote(body: {
+  text?: string;
+  category?: string;
+}): Promise<ApiResponse> {
   const text = (body?.text ?? '').slice(0, 3000).trim();
   const category = (body?.category ?? 'catering') as any;
 
@@ -444,14 +473,16 @@ function localExtractQuote(text: string, category: any): Quote {
 
   // Price per plate e.g. "1500 per plate" or "₹1,200/plate"
   let pricePerPlate: number | null = null;
-  const plateMatch = /(?:₹|rs\.?)?\s*(\d[\d,.]*)\s*(?:per\s*plate|\/plate|\/person|per\s*head)/i.exec(text);
+  const plateMatch =
+    /(?:₹|rs\.?)?\s*(\d[\d,.]*)\s*(?:per\s*plate|\/plate|\/person|per\s*head)/i.exec(text);
   if (plateMatch && plateMatch[1]) {
     pricePerPlate = parseINR(plateMatch[1]);
   }
 
   // Total price e.g. "total 2.5 lakh" or "₹3,50,000 for package"
   let totalPrice: number | null = null;
-  const totalMatch = /(?:total|package|all\s*inclusive|grand\s*total)\D*(\d[\d,.]*\s*(?:lakh|l|cr|k)?)/i.exec(text);
+  const totalMatch =
+    /(?:total|package|all\s*inclusive|grand\s*total)\D*(\d[\d,.]*\s*(?:lakh|l|cr|k)?)/i.exec(text);
   if (totalMatch && totalMatch[1]) {
     totalPrice = parseINR(totalMatch[1]);
   }
@@ -470,11 +501,12 @@ function localExtractQuote(text: string, category: any): Quote {
     guestMinimum = parseInt(minMatch[1], 10);
   }
 
-  const taxIncluded = lower.includes('gst included') || lower.includes('taxes inclusive')
-    ? true
-    : lower.includes('+ 18% gst') || lower.includes('gst extra') || lower.includes('+ gst')
-    ? false
-    : null;
+  const taxIncluded =
+    lower.includes('gst included') || lower.includes('taxes inclusive')
+      ? true
+      : lower.includes('+ 18% gst') || lower.includes('gst extra') || lower.includes('+ gst')
+        ? false
+        : null;
 
   return {
     vendorName: text.split('\n')[0]?.slice(0, 40) ?? 'Vendor',
@@ -492,7 +524,11 @@ function localExtractQuote(text: string, category: any): Quote {
 }
 
 /* 3. Ask Copilot */
-async function handleAskCopilot(body: { question?: string; plan?: Plan; today?: string }): Promise<ApiResponse> {
+async function handleAskCopilot(body: {
+  question?: string;
+  plan?: Plan;
+  today?: string;
+}): Promise<ApiResponse> {
   const question = (body?.question ?? '').slice(0, 500).trim();
   const plan = body?.plan;
   const today = body?.today ?? new Date().toISOString().slice(0, 10);
@@ -593,15 +629,18 @@ Provide JSON with:
       themes: [
         {
           title: 'Royal Marigold & Brass Elegance',
-          description: 'Timeless traditional celebration with scented genda phool cascades, antique brass urlis, and warm fairy lights.',
+          description:
+            'Timeless traditional celebration with scented genda phool cascades, antique brass urlis, and warm fairy lights.',
         },
         {
           title: 'Modern Pastel Garden Fairytale',
-          description: 'Soft blush pinks, sage greens, and delicate floral canopies ideal for open-air afternoon and sunset gatherings.',
+          description:
+            'Soft blush pinks, sage greens, and delicate floral canopies ideal for open-air afternoon and sunset gatherings.',
         },
         {
           title: 'Vibrant Sangeet Carnivale',
-          description: 'High energy colourful drapery, neon sign photo-booths, interactive dhol entry, and fusion street-food stalls.',
+          description:
+            'High energy colourful drapery, neon sign photo-booths, interactive dhol entry, and fusion street-food stalls.',
         },
       ],
       activities: [

@@ -1,10 +1,4 @@
-import {
-  CATEGORIES,
-  type Allocation,
-  type Category,
-  type Occasion,
-  type Plan,
-} from '../schemas';
+import { CATEGORIES, type Allocation, type Category, type Occasion, type Plan } from '../schemas';
 import { largestRemainderRound } from './money';
 import { OCCASION_PRESETS } from './presets';
 
@@ -269,7 +263,11 @@ export function generateOverBudgetOptions(plan: Plan): OverBudgetOption[] {
 
   // Option 2: Trim unlocked flexible categories
   const unlockedNonPriorities = CATEGORIES.filter(
-    (c) => c !== 'catering' && c !== 'contingency' && !plan.locked.includes(c) && !plan.priorities.includes(c),
+    (c) =>
+      c !== 'catering' &&
+      c !== 'contingency' &&
+      !plan.locked.includes(c) &&
+      !plan.priorities.includes(c),
   );
   const flexiblePool = unlockedNonPriorities.reduce((s, c) => s + plan.allocation[c], 0);
 
@@ -301,7 +299,10 @@ export function generateOverBudgetOptions(plan: Plan): OverBudgetOption[] {
 /**
  * Applies an over-budget resolution option to the plan deterministically.
  */
-export function applyOption(plan: Plan, optionId: 'reduce_guests' | 'trim_categories' | 'use_contingency'): Plan {
+export function applyOption(
+  plan: Plan,
+  optionId: 'reduce_guests' | 'trim_categories' | 'use_contingency',
+): Plan {
   const status = budgetStatus(plan);
   if (!status.isOverBudget) return plan;
   const overBy = status.overBy;
@@ -327,7 +328,11 @@ export function applyOption(plan: Plan, optionId: 'reduce_guests' | 'trim_catego
 
   if (optionId === 'trim_categories') {
     const unlockedNonPriorities = CATEGORIES.filter(
-      (c) => c !== 'catering' && c !== 'contingency' && !plan.locked.includes(c) && !plan.priorities.includes(c),
+      (c) =>
+        c !== 'catering' &&
+        c !== 'contingency' &&
+        !plan.locked.includes(c) &&
+        !plan.priorities.includes(c),
     );
     const pool = unlockedNonPriorities.reduce((s, c) => s + plan.allocation[c], 0);
     if (pool < overBy) return plan;

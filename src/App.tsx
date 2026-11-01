@@ -53,11 +53,7 @@ export const App: FC = () => {
 
       {plan ? (
         <>
-          <Navigation
-            currentTab={currentTab}
-            onSelectTab={setCurrentTab}
-            badges={badges}
-          />
+          <Navigation currentTab={currentTab} onSelectTab={setCurrentTab} badges={badges} />
 
           <main className="no-print flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
             {currentTab === 'setup' && (
@@ -73,24 +69,14 @@ export const App: FC = () => {
             {currentTab === 'overview' && (
               <OverviewTab plan={plan} today={today} onNavigate={setCurrentTab} />
             )}
-            {currentTab === 'budget' && (
-              <BudgetTab plan={plan} dispatch={dispatch} />
-            )}
-            {currentTab === 'venues' && (
-              <VenuesTab plan={plan} dispatch={dispatch} />
-            )}
-            {currentTab === 'guests' && (
-              <GuestsTab plan={plan} dispatch={dispatch} />
-            )}
+            {currentTab === 'budget' && <BudgetTab plan={plan} dispatch={dispatch} />}
+            {currentTab === 'venues' && <VenuesTab plan={plan} dispatch={dispatch} />}
+            {currentTab === 'guests' && <GuestsTab plan={plan} dispatch={dispatch} />}
             {currentTab === 'timeline' && (
               <TimelineTab plan={plan} today={today} dispatch={dispatch} />
             )}
-            {currentTab === 'vendors' && (
-              <VendorsTab plan={plan} dispatch={dispatch} />
-            )}
-            {currentTab === 'runsheet' && (
-              <RunSheetTab plan={plan} dispatch={dispatch} />
-            )}
+            {currentTab === 'vendors' && <VendorsTab plan={plan} dispatch={dispatch} />}
+            {currentTab === 'runsheet' && <RunSheetTab plan={plan} dispatch={dispatch} />}
             {currentTab === 'ideas' && <IdeasTab plan={plan} />}
             {currentTab === 'analytics' && (
               <AnalyticsTab plan={plan} today={today} onNavigate={setCurrentTab} />
@@ -185,11 +171,7 @@ export const App: FC = () => {
 
       {/* Family WhatsApp Broadcast Modal */}
       {showWhatsAppModal && plan && (
-        <WhatsAppModal
-          plan={plan}
-          today={today}
-          onClose={() => setShowWhatsAppModal(false)}
-        />
+        <WhatsAppModal plan={plan} today={today} onClose={() => setShowWhatsAppModal(false)} />
       )}
 
       {/* Clean 1-Page Print View */}

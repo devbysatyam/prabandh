@@ -49,7 +49,9 @@ describe('budget.ts', () => {
     const oldDecor = initialAlloc.decor;
 
     // Increase photography by 50,000 with venue locked
-    const result = redistribute(initialAlloc, 'photography', initialAlloc.photography + 50000, ['venue']);
+    const result = redistribute(initialAlloc, 'photography', initialAlloc.photography + 50000, [
+      'venue',
+    ]);
     const newSum = CATEGORIES.reduce((s, c) => s + result.allocation[c], 0);
 
     expect(newSum).toBe(1000000);
@@ -60,7 +62,11 @@ describe('budget.ts', () => {
 
   it('caps redistribution when pool cannot absorb huge increase', () => {
     const initialAlloc = allocate(1000000, 'wedding');
-    const result = redistribute(initialAlloc, 'photography', 5000000, ['venue', 'catering', 'decor']);
+    const result = redistribute(initialAlloc, 'photography', 5000000, [
+      'venue',
+      'catering',
+      'decor',
+    ]);
 
     expect(result.capped).toBe(true);
     const newSum = CATEGORIES.reduce((s, c) => s + result.allocation[c], 0);

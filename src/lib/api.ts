@@ -19,7 +19,8 @@ export async function postApi<T>(endpoint: string, data: any): Promise<T> {
 
 export const api = {
   parseIntake: (text: string) => postApi<Intake>('parse-intake', { text }),
-  extractQuote: (text: string, category: string) => postApi<Quote>('extract-quote', { text, category }),
+  extractQuote: (text: string, category: string) =>
+    postApi<Quote>('extract-quote', { text, category }),
   askCopilot: (question: string, plan: Plan, today?: string) =>
     postApi<{ answer: string; source: string }>('ask-copilot', { question, plan, today }),
   suggestIdeas: (occasion: string, vibe: string, guests: number, totalBudget: number) =>

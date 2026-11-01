@@ -21,13 +21,50 @@ describe('analytics.ts', () => {
     contacted: [],
     perPlate: 180,
     tasks: [
-      { id: 't1', title: 'Order Birthday Cake', category: 'catering', leadDays: 14, durationDays: 2, dependsOn: [], status: 'done' },
-      { id: 't2', title: 'Book Magician & Games Host', category: 'entertainment', leadDays: 21, durationDays: 3, dependsOn: [], status: 'todo' },
+      {
+        id: 't1',
+        title: 'Order Birthday Cake',
+        category: 'catering',
+        leadDays: 14,
+        durationDays: 2,
+        dependsOn: [],
+        status: 'done',
+      },
+      {
+        id: 't2',
+        title: 'Book Magician & Games Host',
+        category: 'entertainment',
+        leadDays: 21,
+        durationDays: 3,
+        dependsOn: [],
+        status: 'todo',
+      },
     ],
     guestList: [
-      { id: 'g1', name: 'Sharma Family', count: 4, side: 'general', rsvp: 'confirmed', diet: 'veg' },
-      { id: 'g2', name: 'Verma Family', count: 3, side: 'general', rsvp: 'confirmed', diet: 'jain' },
-      { id: 'g3', name: 'Gupta Family', count: 2, side: 'general', rsvp: 'pending', diet: 'non_veg' },
+      {
+        id: 'g1',
+        name: 'Sharma Family',
+        count: 4,
+        side: 'general',
+        rsvp: 'confirmed',
+        diet: 'veg',
+      },
+      {
+        id: 'g2',
+        name: 'Verma Family',
+        count: 3,
+        side: 'general',
+        rsvp: 'confirmed',
+        diet: 'jain',
+      },
+      {
+        id: 'g3',
+        name: 'Gupta Family',
+        count: 2,
+        side: 'general',
+        rsvp: 'pending',
+        diet: 'non_veg',
+      },
     ],
     vendors: [
       { id: 'v1', name: 'Magic Balloon Decor', category: 'decor', status: 'booked', payments: [] },
@@ -101,7 +138,9 @@ describe('analytics.ts', () => {
   it('computes 4-pillar readiness score and tier', () => {
     const analytics = computeCelebrationAnalytics(plan, '2026-11-01');
     expect(analytics.readiness.totalScore).toBeGreaterThanOrEqual(60);
-    expect(['excellent', 'on_track', 'needs_attention', 'critical']).toContain(analytics.readiness.tier);
+    expect(['excellent', 'on_track', 'needs_attention', 'critical']).toContain(
+      analytics.readiness.tier,
+    );
     expect(analytics.keyActionRecommendations.length).toBeGreaterThan(0);
   });
 });

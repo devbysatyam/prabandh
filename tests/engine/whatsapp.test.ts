@@ -22,7 +22,15 @@ describe('whatsapp.ts', () => {
       contacted: [],
       perPlate: 1800,
       tasks: [
-        { id: '1', title: 'Book Venue', category: 'venue', leadDays: 90, durationDays: 5, dependsOn: [], status: 'todo' },
+        {
+          id: '1',
+          title: 'Book Venue',
+          category: 'venue',
+          leadDays: 90,
+          durationDays: 5,
+          dependsOn: [],
+          status: 'todo',
+        },
       ],
       guestList: [
         { id: 'g1', name: 'Gupta Family', count: 4, side: 'bride', rsvp: 'confirmed', diet: 'veg' },

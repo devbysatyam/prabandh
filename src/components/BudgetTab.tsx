@@ -3,13 +3,7 @@ import type { Category, Plan } from '../schemas';
 import { CATEGORIES } from '../schemas';
 import type { Action } from '../state/planStore';
 import { Icon } from './Icon';
-import {
-  budgetStatus,
-  generateOverBudgetOptions,
-  scaleGuests,
-  formatINR,
-  toLakh,
-} from '../engine';
+import { budgetStatus, generateOverBudgetOptions, scaleGuests, formatINR, toLakh } from '../engine';
 import { OCCASION_LABELS } from '../engine/presets';
 
 interface BudgetTabProps {
@@ -56,17 +50,24 @@ export const BudgetTab: FC<BudgetTabProps> = ({ plan, dispatch }) => {
               Connected Budget Architecture
             </h3>
             <p className="text-xs text-stone-500 dark:text-stone-400">
-              100% deterministic integer rupee math with zero rounding drift. Drag any slider to redistribute.
+              100% deterministic integer rupee math with zero rounding drift. Drag any slider to
+              redistribute.
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-stone-500">Edit total:</span>
+            <label htmlFor="edit-total-budget" className="text-xs text-stone-500">
+              Edit total:
+            </label>
             <input
+              id="edit-total-budget"
+              aria-label="Total celebration budget in rupees"
               type="number"
               value={plan.totalBudget}
               step={10000}
               min={10000}
-              onChange={(e) => dispatch({ type: 'setBudget', budget: parseInt(e.target.value || '10000', 10) })}
+              onChange={(e) =>
+                dispatch({ type: 'setBudget', budget: parseInt(e.target.value || '10000', 10) })
+              }
               className="w-36 rounded-lg border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 px-2.5 py-1 text-xs font-bold text-stone-900 dark:text-stone-100"
             />
           </div>
@@ -75,23 +76,41 @@ export const BudgetTab: FC<BudgetTabProps> = ({ plan, dispatch }) => {
         {/* 4-col summary metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 py-3 border-y border-stone-100 dark:border-stone-800">
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Total Allocation</span>
-            <p className="text-xl font-extrabold text-stone-900 dark:text-stone-100">{formatINR(status.total)}</p>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Total Allocation
+            </span>
+            <p className="text-xl font-extrabold text-stone-900 dark:text-stone-100">
+              {formatINR(status.total)}
+            </p>
             <p className="text-[11px] text-stone-500">{toLakh(status.total)}</p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Committed Contracts</span>
-            <p className="text-xl font-extrabold text-stone-900 dark:text-stone-100">{formatINR(status.committed)}</p>
-            <p className="text-[11px] text-stone-500">{plan.vendors.filter((v) => v.status === 'booked').length} booked</p>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Committed Contracts
+            </span>
+            <p className="text-xl font-extrabold text-stone-900 dark:text-stone-100">
+              {formatINR(status.committed)}
+            </p>
+            <p className="text-[11px] text-stone-500">
+              {plan.vendors.filter((v) => v.status === 'booked').length} booked
+            </p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Estimated Pool</span>
-            <p className="text-xl font-extrabold text-stone-900 dark:text-stone-100">{formatINR(status.estimated)}</p>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Estimated Pool
+            </span>
+            <p className="text-xl font-extrabold text-stone-900 dark:text-stone-100">
+              {formatINR(status.estimated)}
+            </p>
             <p className="text-[11px] text-stone-500">Unbooked categories</p>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Contingency Buffer</span>
-            <p className="text-xl font-extrabold text-stone-900 dark:text-stone-100">{formatINR(status.contingencyLeft)}</p>
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+              Contingency Buffer
+            </span>
+            <p className="text-xl font-extrabold text-stone-900 dark:text-stone-100">
+              {formatINR(status.contingencyLeft)}
+            </p>
             <p className="text-[11px] text-stone-500">Fixed 10% safety pool</p>
           </div>
         </div>
@@ -139,7 +158,10 @@ export const BudgetTab: FC<BudgetTabProps> = ({ plan, dispatch }) => {
                 Over Budget by {formatINR(status.overBy)}
               </h4>
               <p className="text-xs text-red-700 dark:text-red-300 mt-0.5">
-                Your guest headcount of {plan.guests} demands {formatINR(cateringScaling.requiredCatering)} for catering at {formatINR(plan.perPlate)}/plate, but catering is currently budgeted at {formatINR(plan.allocation.catering)}.
+                Your guest headcount of {plan.guests} demands{' '}
+                {formatINR(cateringScaling.requiredCatering)} for catering at{' '}
+                {formatINR(plan.perPlate)}/plate, but catering is currently budgeted at{' '}
+                {formatINR(plan.allocation.catering)}.
               </p>
 
               {/* 3 Automated Trade-off Solutions */}
@@ -223,9 +245,7 @@ export const BudgetTab: FC<BudgetTabProps> = ({ plan, dispatch }) => {
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-stone-500 dark:text-stone-400">
-                        {customLabel}
-                      </p>
+                      <p className="text-xs text-stone-500 dark:text-stone-400">{customLabel}</p>
                     </div>
                   </div>
 
@@ -243,6 +263,9 @@ export const BudgetTab: FC<BudgetTabProps> = ({ plan, dispatch }) => {
                     <button
                       type="button"
                       onClick={() => handleToggleLock(cat)}
+                      aria-label={
+                        isLocked ? `Unlock ${cat} category` : `Lock ${cat} category amount`
+                      }
                       className={`p-2 rounded-lg border transition ${
                         isLocked
                           ? 'border-brand-500 bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300'
@@ -259,6 +282,7 @@ export const BudgetTab: FC<BudgetTabProps> = ({ plan, dispatch }) => {
                 <div className="flex items-center gap-3">
                   <input
                     type="range"
+                    aria-label={`${cat} allocation slider`}
                     min={0}
                     max={status.total}
                     step={1000}
@@ -269,6 +293,7 @@ export const BudgetTab: FC<BudgetTabProps> = ({ plan, dispatch }) => {
                   />
                   <input
                     type="number"
+                    aria-label={`${cat} allocation amount in rupees`}
                     min={0}
                     max={status.total}
                     step={1000}

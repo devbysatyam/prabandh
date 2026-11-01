@@ -11,7 +11,7 @@ export function formatINR(rupees: number): string {
   const rounded = Math.round(rupees);
   const isNegative = rounded < 0;
   const abs = Math.abs(rounded);
-  
+
   const s = abs.toString();
   if (s.length <= 3) {
     return `${isNegative ? '-' : ''}₹${s}`;
@@ -50,7 +50,13 @@ export function toLakh(rupees: number): string {
  */
 export function parseINR(input: string): number | null {
   if (!input || typeof input !== 'string') return null;
-  const text = input.trim().toLowerCase().replace(/,/g, '').replace(/₹/g, '').replace(/rs\.?/g, '').trim();
+  const text = input
+    .trim()
+    .toLowerCase()
+    .replace(/,/g, '')
+    .replace(/₹/g, '')
+    .replace(/rs\.?/g, '')
+    .trim();
   if (!text) return null;
 
   // Crore match: e.g. "2.5 crore", "2cr", "1.2crores"

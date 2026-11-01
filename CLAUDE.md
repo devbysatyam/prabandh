@@ -7,6 +7,7 @@ You are building **Prabandh (प्रबंध)**, a connected, AI-assisted eve
 ## 1. Product Thesis
 
 "One plan, everything connected." Event planning is an interconnected graph:
+
 - Guest count drives catering headcount and plates.
 - Budget allocation drives vendor sourcing and trade-offs.
 - Venue date drives the milestone timeline and payments.

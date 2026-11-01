@@ -134,11 +134,7 @@ export function topologicalSort(tasks: Task[]): Task[] {
 /**
  * Builds full schedule with DAG dates, delay propagation, and status flags.
  */
-export function buildSchedule(
-  tasks: Task[],
-  eventDate: string,
-  today: string,
-): ScheduledTask[] {
+export function buildSchedule(tasks: Task[], eventDate: string, today: string): ScheduledTask[] {
   const sorted = topologicalSort(tasks);
   const effectiveMap = new Map<string, string>();
   const result: ScheduledTask[] = [];
@@ -186,11 +182,7 @@ export function buildSchedule(
 /**
  * Propagate delay: identifies all downstream tasks affected when a task is delayed.
  */
-export function propagateDelay(
-  tasks: Task[],
-  delayedTaskId: string,
-  delayDays: number,
-): string[] {
+export function propagateDelay(tasks: Task[], delayedTaskId: string, delayDays: number): string[] {
   if (delayDays <= 0) return [];
   const map = new Map<string, string[]>();
   for (const t of tasks) {

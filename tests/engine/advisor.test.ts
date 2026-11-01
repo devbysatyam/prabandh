@@ -21,7 +21,15 @@ describe('advisor.ts', () => {
     contacted: [],
     perPlate: 1750,
     tasks: [
-      { id: '1', title: 'Lock Venue', category: 'venue', leadDays: 90, durationDays: 7, dependsOn: [], status: 'todo' },
+      {
+        id: '1',
+        title: 'Lock Venue',
+        category: 'venue',
+        leadDays: 90,
+        durationDays: 7,
+        dependsOn: [],
+        status: 'todo',
+      },
     ],
     guestList: [
       { id: 'g1', name: 'Sharma', count: 4, side: 'bride', rsvp: 'confirmed', diet: 'veg' },
@@ -37,7 +45,9 @@ describe('advisor.ts', () => {
   it('generates ranked insights across budget, timeline and vendors', () => {
     const insights = planInsights(plan, '2026-10-01');
     expect(insights.length).toBeGreaterThan(0);
-    expect(insights.every((i) => ['critical', 'warning', 'suggestion'].includes(i.severity))).toBe(true);
+    expect(insights.every((i) => ['critical', 'warning', 'suggestion'].includes(i.severity))).toBe(
+      true,
+    );
   });
 
   it('formats verified plan facts string for prompting or local review', () => {

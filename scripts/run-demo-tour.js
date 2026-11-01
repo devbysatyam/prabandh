@@ -1,11 +1,11 @@
 // Script to be injected into page to run the automated demo tour
-window.__runPrabandhTour = async function() {
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+window.__runPrabandhTour = async function () {
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const smoothScrollTo = async (y, duration = 1200) => {
     const startY = window.scrollY;
     const diff = y - startY;
     const start = performance.now();
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       function step(now) {
         const elapsed = now - start;
         const progress = Math.min(elapsed / duration, 1);
@@ -22,7 +22,9 @@ window.__runPrabandhTour = async function() {
   };
 
   const clickTab = (text) => {
-    const btn = Array.from(document.querySelectorAll('nav button, [role="tab"]')).find(b => b.innerText.includes(text));
+    const btn = Array.from(document.querySelectorAll('nav button, [role="tab"]')).find((b) =>
+      b.innerText.includes(text),
+    );
     if (btn) {
       btn.click();
       return true;
@@ -30,13 +32,14 @@ window.__runPrabandhTour = async function() {
     return false;
   };
 
-  console.log("Starting Tour...");
+  console.log('Starting Tour...');
   await sleep(1500);
 
   // 1. Intake screen
   const textarea = document.querySelector('textarea');
   if (textarea) {
-    const textToType = "hey i want to make a celebration of 150 guest birthday party in new delhi mayur vihar on 15/01/2027 budget is 50000";
+    const textToType =
+      'hey i want to make a celebration of 150 guest birthday party in new delhi mayur vihar on 15/01/2027 budget is 50000';
     textarea.focus();
     for (let i = 0; i < textToType.length; i += 4) {
       textarea.value = textToType.slice(0, i + 4);
@@ -45,7 +48,9 @@ window.__runPrabandhTour = async function() {
     }
     await sleep(1000);
 
-    const fillBtn = Array.from(document.querySelectorAll('button')).find(b => b.innerText.includes('Fill Form From Description'));
+    const fillBtn = Array.from(document.querySelectorAll('button')).find((b) =>
+      b.innerText.includes('Fill Form From Description'),
+    );
     if (fillBtn) {
       fillBtn.style.outline = '3px solid #f97316';
       await sleep(500);
@@ -55,7 +60,9 @@ window.__runPrabandhTour = async function() {
   }
 
   // 2. Launch Sample Celebration for full 9-section richness
-  const sampleBtn = Array.from(document.querySelectorAll('button')).find(b => b.innerText.includes('Explore Interactive Sample'));
+  const sampleBtn = Array.from(document.querySelectorAll('button')).find((b) =>
+    b.innerText.includes('Explore Interactive Sample'),
+  );
   if (sampleBtn) {
     sampleBtn.style.outline = '3px solid #ea580c';
     await sleep(600);
@@ -138,6 +145,6 @@ window.__runPrabandhTour = async function() {
     await sleep(1500);
   }
 
-  console.log("Tour completed successfully!");
-  return "Tour completed";
+  console.log('Tour completed successfully!');
+  return 'Tour completed';
 };
